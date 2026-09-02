@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saúde Acessível</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-map-marker-alt"></i></div>
+      <span>Saúde Acessível</span>
+    </div>
+    <nav class="nav-main">
+      <a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Início</a>
+      <a href="#" class="nav-link" data-page="postos"><i class="fas fa-map-marked-alt"></i> Postos</a>
+      <a href="#" class="nav-link" data-page="vacinacao"><i class="fas fa-syringe"></i> Vacinação</a>
+      <a href="#" class="nav-link" data-page="profissionais"><i class="fas fa-user-md"></i> Profissionais</a>
+      <a href="#" class="nav-link" data-page="calendario"><i class="fas fa-calendar-alt"></i> Calendário</a>
+    </nav>
+    <div class="header-user">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span id="userNome">Carregando...</span>
+      <a href="#" class="btn-sair" id="btnSair">Sair</a>
+    </div>
+    <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Início</a>
+  <a href="#" class="nav-link" data-page="postos"><i class="fas fa-map-marked-alt"></i> Postos Próximos</a>
+  <a href="#" class="nav-link" data-page="vacinacao"><i class="fas fa-syringe"></i> Vacinação</a>
+  <a href="#" class="nav-link" data-page="profissionais"><i class="fas fa-user-md"></i> Profissionais</a>
+  <a href="#" class="nav-link" data-page="calendario"><i class="fas fa-calendar-alt"></i> Calendário</a>
+  <div class="mobile-nav-user">
+    <div class="user-avatar" id="userAvatarMobile">?</div>
+    <span id="userNomeMobile">Carregando...</span>
+    <a href="#" class="btn-sair" id="btnSairMobile">Sair</a>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- ========== PAGE: HOME ========== -->
+  <section class="page active" id="page-home">
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar serviço, especialidade ou descreva um sintoma..." id="searchInput" />
+        <button class="btn-search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="search-hint"><i class="fas fa-robot"></i> Não achou o que procura? Descreva seus sintomas — uma IA sugere a especialidade certa.</div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="home-grid">
+      <!-- Quick Cards -->
+      <div class="quick-cards">
+        <div class="qcard" data-target="postos">
+          <div class="qcard-img postos-img"><i class="fas fa-map-marked-alt"></i></div>
+          <div class="qcard-body">
+            <h3>Postos Próximos</h3>
+            <p>Veja os postos de saúde perto de você.</p>
+          </div>
+        </div>
+        <div class="qcard" data-target="vacinacao">
+          <div class="qcard-img vacina-img"><i class="fas fa-syringe"></i></div>
+          <div class="qcard-body">
+            <h3>Vacinação</h3>
+            <p>Campanhas e vacinas disponíveis.</p>
+          </div>
+        </div>
+        <div class="qcard" data-target="profissionais">
+          <div class="qcard-img prof-img"><i class="fas fa-user-md"></i></div>
+          <div class="qcard-body">
+            <h3>Profissionais Hoje</h3>
+            <p>Médico e horários de atendimento.</p>
+          </div>
+        </div>
+        <div class="qcard highlight" data-target="calendario">
+          <div class="qcard-img cal-img"><i class="fas fa-calendar-alt"></i></div>
+          <div class="qcard-body">
+            <h3>Calendário da Saúde</h3>
+            <p>Eventos e feriados da saúde.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="home-sidebar">
+        <div class="sidebar-card horarios-card">
+          <h3><i class="fas fa-clock"></i> Horários de Hoje</h3>
+          <ul class="horario-list">
+            <li><span class="dot dot-blue"><i class="fas fa-tooth"></i></span><div><strong>Dentista</strong><span>8h00 – 12h00</span></div></li>
+            <li><span class="dot dot-green"><i class="fas fa-stethoscope"></i></span><div><strong>Clínico Geral</strong><span>13h00 – 17h00</span></div></li>
+            <li><span class="dot dot-teal"><i class="fas fa-baby"></i></span><div><strong>Pediatra</strong><span>14h00 – 18h00</span></div></li>
+            <li><span class="dot dot-orange"><i class="fas fa-heartbeat"></i></span><div><strong>Cardiologista</strong><span>9h00 – 12h00</span></div></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Avisos -->
+    <div class="avisos-section">
+      <h2><i class="fas fa-bullhorn"></i> Avisos Importantes</h2>
+      <div class="aviso-list" id="avisoList"></div>
+    </div>
+  </section>
+
+  <!-- ========== PAGE: POSTOS ========== -->
+  <section class="page" id="page-postos">
+    <div class="page-header">
+      <h1><i class="fas fa-map-marked-alt"></i> Postos de Saúde Próximos</h1>
+      <p>Encontre o posto mais perto de você e confira os serviços disponíveis.</p>
+    </div>
+
+    <div class="geo-bar">
+      <button class="btn btn-primary btn-sm" id="btnGeoloc"><i class="fas fa-location-crosshairs"></i> Usar minha localização</button>
+      <span class="geo-status" id="geoStatus"></span>
+    </div>
+
+    <div class="mini-mapa-wrap" id="miniMapaWrap" style="display:none;">
+      <div class="mini-mapa-header">
+        <span><i class="fas fa-route"></i> Trajeto até <strong id="miniMapaDestino">—</strong></span>
+        <span class="mini-mapa-dist" id="miniMapaDist"></span>
+      </div>
+      <div id="miniMapa"></div>
+    </div>
+    <div class="mini-mapa-placeholder" id="miniMapaPlaceholder">
+      <i class="fas fa-map-location-dot"></i>
+      <span>Ative sua localização para ver o mapa com o trajeto até o posto mais próximo.</span>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="aberto">Aberto Agora</button>
+      <button class="filter-btn" data-filter="fechado">Fechado</button>
+      <button class="filter-btn" data-filter="urgencia">Urgência 24h</button>
+    </div>
+
+    <div class="postos-grid" id="postosGrid">
+      <!-- JS inserts cards -->
+    </div>
+
+    <div class="mapa-placeholder">
+      <i class="fas fa-map"></i>
+      <span>Mapa interativo indisponível nesta versão demo — use o botão "Como Chegar" para abrir no Google Maps.</span>
+    </div>
+  </section>
+
+  <!-- ========== PAGE: VACINAÇÃO ========== -->
+  <section class="page" id="page-vacinacao">
+    <div class="page-header">
+      <h1><i class="fas fa-syringe"></i> Vacinação</h1>
+      <p>Campanhas ativas, calendário vacinal e disponibilidade por posto.</p>
+    </div>
+
+    <div class="vacina-tabs">
+      <button class="vtab active" data-vtab="campanhas">Campanhas Ativas</button>
+      <button class="vtab" data-vtab="calendario-vacinal">Calendário Vacinal</button>
+      <button class="vtab" data-vtab="meu-historico">Meu Histórico</button>
+    </div>
+
+    <div class="vtab-content active" id="vtab-campanhas">
+      <div class="campanhas-grid" id="campanhasGrid"></div>
+    </div>
+
+    <div class="vtab-content" id="vtab-calendario-vacinal">
+      <div class="cal-vacinal" id="calVacinal"></div>
+    </div>
+
+    <div class="vtab-content" id="vtab-meu-historico">
+      <div class="historico-wrap">
+        <div class="historico-card" id="historicoCards"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PAGE: PROFISSIONAIS ========== -->
+  <section class="page" id="page-profissionais">
+    <div class="page-header">
+      <h1><i class="fas fa-user-md"></i> Profissionais de Saúde</h1>
+      <p>Equipe disponível hoje e seus horários de atendimento.</p>
+    </div>
+
+    <div class="esp-filter">
+      <button class="esp-btn active" data-esp="todos">Todos</button>
+      <button class="esp-btn" data-esp="clinico">Clínico Geral</button>
+      <button class="esp-btn" data-esp="pediatra">Pediatria</button>
+      <button class="esp-btn" data-esp="dentista">Odontologia</button>
+      <button class="esp-btn" data-esp="cardio">Cardiologia</button>
+      <button class="esp-btn" data-esp="gineco">Ginecologia</button>
+    </div>
+
+    <div class="prof-grid" id="profGrid"></div>
+  </section>
+
+  <!-- ========== PAGE: CALENDÁRIO ========== -->
+  <section class="page" id="page-calendario">
+    <div class="page-header">
+      <h1><i class="fas fa-calendar-alt"></i> Calendário da Saúde</h1>
+      <p>Eventos, campanhas, feriados e datas importantes.</p>
+    </div>
+    <div class="calendario-wrap">
+      <div class="cal-nav">
+        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+        <h2 id="calTitle"></h2>
+        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i class="fas fa-circle" style="color:#0dbdad"></i> Campanha</span>
+        <span><i class="fas fa-circle" style="color:#e67e22"></i> Feriado</span>
+        <span><i class="fas fa-circle" style="color:#3b82f6"></i> Evento</span>
+      </div>
+      <div class="cal-events" id="calEvents"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL: Posto Detail -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="postoModal">
+    <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script src="ml/sintomas-ia.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

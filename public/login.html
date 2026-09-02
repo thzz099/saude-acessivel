@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar — Saúde Acessível</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="login.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="login-body">
+
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon"><i class="fas fa-map-marker-alt"></i></div>
+      <span>Saúde Acessível</span>
+    </div>
+
+    <div class="login-tabs">
+      <button class="login-tab active" data-form="entrar">Entrar</button>
+      <button class="login-tab" data-form="cadastrar">Criar conta</button>
+    </div>
+
+    <!-- FORM: ENTRAR -->
+    <form id="formEntrar" class="login-form active">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" required />
+
+      <label>Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••••" required />
+
+      <button type="submit" class="btn btn-primary login-btn">
+        <i class="fas fa-right-to-bracket"></i> Entrar
+      </button>
+    </form>
+
+    <!-- FORM: CADASTRAR -->
+    <form id="formCadastrar" class="login-form">
+      <label>Nome</label>
+      <input type="text" id="regNome" placeholder="Seu nome completo" required />
+
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="seuemail@exemplo.com" required />
+
+      <label>Senha</label>
+      <input type="password" id="regSenha" placeholder="Mínimo 6 caracteres" required minlength="6" />
+
+      <button type="submit" class="btn btn-primary login-btn">
+        <i class="fas fa-user-plus"></i> Criar conta
+      </button>
+    </form>
+
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
