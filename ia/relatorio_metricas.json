@@ -1,0 +1,338 @@
+{
+  "dataset": {
+    "treino": 3808,
+    "teste": 140,
+    "vazamento": 0,
+    "por_classe_treino": {
+      "dentista": 537,
+      "pediatra": 480,
+      "clinico": 618,
+      "cardio": 452,
+      "gineco": 486,
+      "urgencia": 726,
+      "outro": 509
+    },
+    "por_classe_teste_a": {
+      "dentista": 20,
+      "pediatra": 20,
+      "clinico": 20,
+      "cardio": 20,
+      "gineco": 20,
+      "urgencia": 20,
+      "outro": 20
+    },
+    "teste_b": 70,
+    "teste_c": 70
+  },
+  "validacao_cruzada_agrupada": {
+    "Regressão Logística (C=5)": {
+      "acuracia_media": 0.9600822236248063,
+      "acuracia_desvio": 0.006985240262729333,
+      "f1_macro_media": 0.959994048051351
+    },
+    "Regressão Logística (C=20)": {
+      "acuracia_media": 0.9598194115354503,
+      "acuracia_desvio": 0.008417892100449085,
+      "f1_macro_media": 0.9597890587934279
+    },
+    "SVM Linear": {
+      "acuracia_media": 0.9613952493783218,
+      "acuracia_desvio": 0.008932766922926744,
+      "f1_macro_media": 0.9615772231602564
+    },
+    "Naive Bayes (Complement)": {
+      "acuracia_media": 0.9275245653426041,
+      "acuracia_desvio": 0.015410418635958557,
+      "f1_macro_media": 0.9256746331966308
+    }
+  },
+  "modelo_final": {
+    "algoritmo": "TF-IDF (palavras + bigramas + char 3-4) + Regressão Logística C=5",
+    "n_features": 7246
+  },
+  "teste_c_cego": {
+    "frases": 70,
+    "acuracia": 0.9142857142857143,
+    "recall_urgencia": 1.0,
+    "falsos_alarmes_urgencia": 2,
+    "por_classe": {
+      "cardio": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1-score": 0.8888888888888888,
+        "support": 10.0
+      },
+      "clinico": {
+        "precision": 0.75,
+        "recall": 0.9,
+        "f1-score": 0.8181818181818182,
+        "support": 10.0
+      },
+      "dentista": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1-score": 0.8888888888888888,
+        "support": 10.0
+      },
+      "gineco": {
+        "precision": 0.9,
+        "recall": 0.9,
+        "f1-score": 0.9,
+        "support": 10.0
+      },
+      "outro": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 10.0
+      },
+      "pediatra": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 10.0
+      },
+      "urgencia": {
+        "precision": 0.8333333333333334,
+        "recall": 1.0,
+        "f1-score": 0.9090909090909091,
+        "support": 10.0
+      },
+      "accuracy": 0.9142857142857143,
+      "macro avg": {
+        "precision": 0.9261904761904762,
+        "recall": 0.9142857142857144,
+        "f1-score": 0.9150072150072149,
+        "support": 70.0
+      },
+      "weighted avg": {
+        "precision": 0.9261904761904761,
+        "recall": 0.9142857142857143,
+        "f1-score": 0.915007215007215,
+        "support": 70.0
+      }
+    },
+    "erros": [
+      {
+        "texto": "meu filho bateu a boca e o dente ficou mole",
+        "correto": "dentista",
+        "previsto": "urgencia",
+        "confianca": 0.5529737774747988
+      },
+      {
+        "texto": "estou com a boca inchada e dor no molar",
+        "correto": "dentista",
+        "previsto": "clinico",
+        "confianca": 0.43049575380914773
+      },
+      {
+        "texto": "sinto enjoo toda manhã e não estou grávida",
+        "correto": "clinico",
+        "previsto": "gineco",
+        "confianca": 0.45759866379798153
+      },
+      {
+        "texto": "minhas pernas incham muito",
+        "correto": "cardio",
+        "previsto": "urgencia",
+        "confianca": 0.44428976539239606
+      },
+      {
+        "texto": "já coloquei stent e preciso de retorno",
+        "correto": "cardio",
+        "previsto": "clinico",
+        "confianca": 0.4150309452953059
+      },
+      {
+        "texto": "estou grávida e com enjoo",
+        "correto": "gineco",
+        "previsto": "clinico",
+        "confianca": 0.4715034644869917
+      }
+    ]
+  },
+  "sinais_alarme": {
+    "cobertura_urgencias_treino": 0.5647382920110193,
+    "disparos_indevidos_treino": 8
+  },
+  "teste_b_cego": {
+    "frases": 70,
+    "acuracia": 0.9571428571428572,
+    "recall_urgencia": 1.0,
+    "falsos_alarmes_urgencia": 1,
+    "erros": [
+      {
+        "texto": "minha protese quebrou",
+        "correto": "dentista",
+        "previsto": "outro",
+        "confianca": 0.27260804739061556
+      },
+      {
+        "texto": "dor de dente insuportavel",
+        "correto": "dentista",
+        "previsto": "urgencia",
+        "confianca": 0.6139937476035513
+      },
+      {
+        "texto": "meu tornozelo incha muito à tarde",
+        "correto": "cardio",
+        "previsto": "outro",
+        "confianca": 0.39416818324901587
+      }
+    ]
+  },
+  "teste_independente": {
+    "acuracia_argmax": 0.9928571428571429,
+    "acuracia_com_regras": 0.9857142857142858,
+    "recall_urgencia": 1.0,
+    "falsos_alarmes_urgencia": 2,
+    "urgencias_perdidas": [],
+    "por_classe": {
+      "cardio": {
+        "precision": 1.0,
+        "recall": 0.95,
+        "f1-score": 0.9743589743589743,
+        "support": 20.0
+      },
+      "clinico": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 20.0
+      },
+      "dentista": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 20.0
+      },
+      "gineco": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 20.0
+      },
+      "outro": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 20.0
+      },
+      "pediatra": {
+        "precision": 1.0,
+        "recall": 0.95,
+        "f1-score": 0.9743589743589743,
+        "support": 20.0
+      },
+      "urgencia": {
+        "precision": 0.9090909090909091,
+        "recall": 1.0,
+        "f1-score": 0.9523809523809523,
+        "support": 20.0
+      },
+      "accuracy": 0.9857142857142858,
+      "macro avg": {
+        "precision": 0.987012987012987,
+        "recall": 0.9857142857142858,
+        "f1-score": 0.9858712715855573,
+        "support": 140.0
+      },
+      "weighted avg": {
+        "precision": 0.987012987012987,
+        "recall": 0.9857142857142858,
+        "f1-score": 0.9858712715855572,
+        "support": 140.0
+      }
+    }
+  },
+  "matriz_confusao_teste_c": {
+    "classes": [
+      "cardio",
+      "clinico",
+      "dentista",
+      "gineco",
+      "outro",
+      "pediatra",
+      "urgencia"
+    ],
+    "valores": [
+      [
+        8,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        9,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        8,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        9,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        10,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        10
+      ]
+    ]
+  },
+  "erros": [
+    {
+      "texto": "meu filho não come direito",
+      "correto": "pediatra",
+      "previsto": "urgencia",
+      "confianca": 0.5065353227582532
+    },
+    {
+      "texto": "meu pai teve infarto e quero me prevenir",
+      "correto": "cardio",
+      "previsto": "urgencia",
+      "confianca": 0.5649184036775646
+    }
+  ]
+}

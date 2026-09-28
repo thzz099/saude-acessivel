@@ -1,202 +1,127 @@
-/* =============================================
-   sintomas-ia.js
-   ---------------------------------------------
-   Um classificador de texto bem simples, mas que
-   usa uma técnica clássica de Machine Learning:
+/* =============================================================
+   sintomas-ia.js — Motor de inferência da IA de triagem (v2)
+   -------------------------------------------------------------
+   O modelo é TREINADO em Python (ia/treinar_modelo.py, Google Colab)
+   e seus pesos são exportados para modelo-ia.js (objeto MODELO_IA).
+   Este arquivo só executa a previsão — replica exatamente o
+   pré-processamento e a matemática do scikit-learn:
 
-   1) TF-IDF  → transforma cada frase em um vetor
-      de números que representa "quais palavras
-      importam mais nela".
-   2) Similaridade de cosseno → mede o quão
-      parecidos dois vetores são (0 = nada a ver,
-      1 = idênticos).
+     texto → normalização → features (palavras, pares, n-gramas de letras)
+           → TF-IDF (tf sublinear, L2) → Regressão Logística → softmax
 
-   Treinamos com frases de exemplo de cada
-   especialidade. Quando o usuário digita um
-   sintoma, comparamos com todas as frases de
-   treino e vemos qual especialidade "vence".
+   Camadas de decisão, em ordem de prioridade:
+     1. Sinais de crise de saúde mental  → CVV 188 / SAMU 192
+     2. Sinais de alarme (regras)        → urgência
+     3. Probabilidade de urgência ≥ limiar → urgência (viés de segurança)
+     4. Classe "outro" ou confiança baixa → não sugere nada (abstenção)
+     5. Caso contrário → especialidade(s) mais provável(is)
 
-   Não precisa de nenhuma biblioteca externa —
-   dá pra entender e reescrever cada linha.
-   ============================================= */
+   Privacidade: tudo roda no navegador. O texto digitado NUNCA é
+   enviado ao servidor.
+   ============================================================= */
 
-const DADOS_TREINO = [
-  { categoria: 'dentista', texto: 'dor de dente forte latejante' },
-  { categoria: 'dentista', texto: 'gengiva inflamada sangrando' },
-  { categoria: 'dentista', texto: 'dente quebrado caiu restauração' },
-  { categoria: 'dentista', texto: 'dor ao mastigar sensibilidade no dente' },
-  { categoria: 'dentista', texto: 'mau hálito placa bacteriana cárie' },
-  { categoria: 'dentista', texto: 'siso nascendo inflamado dói pra abrir a boca' },
-  { categoria: 'dentista', texto: 'quero limpeza dental e avaliação de canal' },
-  { categoria: 'dentista', texto: 'aparelho ortodôntico soltou machucando a boca' },
-  { categoria: 'dentista', texto: 'dente furado buraco no dente doendo' },
-  { categoria: 'dentista', texto: 'boca inchada abscesso perto do dente' },
-  { categoria: 'dentista', texto: 'quebrei um dente jogando bola' },
-  { categoria: 'dentista', texto: 'quero avaliação odontológica de rotina' },
-  { categoria: 'dentista', texto: 'sangramento na gengiva ao escovar os dentes' },
-  { categoria: 'dentista', texto: 'nascimento do dente do siso doendo muito' },
-
-  { categoria: 'pediatra', texto: 'bebê com febre alta chorando muito' },
-  { categoria: 'pediatra', texto: 'criança com tosse e coriza' },
-  { categoria: 'pediatra', texto: 'recém nascido não quer mamar' },
-  { categoria: 'pediatra', texto: 'meu filho está com diarreia e vômito' },
-  { categoria: 'pediatra', texto: 'caderneta de vacinação da criança atrasada' },
-  { categoria: 'pediatra', texto: 'criança com manchas vermelhas na pele alergia' },
-  { categoria: 'pediatra', texto: 'bebê chorando muito sem parar cólica' },
-  { categoria: 'pediatra', texto: 'acompanhamento de crescimento e peso do bebê' },
-  { categoria: 'pediatra', texto: 'meu filho caiu machucou o braço quero levar no médico infantil' },
-  { categoria: 'pediatra', texto: 'consulta de rotina para recém nascido' },
-  { categoria: 'pediatra', texto: 'criança com dor de ouvido chorando à noite' },
-  { categoria: 'pediatra', texto: 'meu bebê está com assadura muito forte' },
-  { categoria: 'pediatra', texto: 'filho com alergia de pele coçando muito' },
-  { categoria: 'pediatra', texto: 'quero levar minha filha no médico de criança' },
-
-  { categoria: 'cardio', texto: 'dor no peito aperto falta de ar' },
-  { categoria: 'cardio', texto: 'palpitação coração acelerado batendo forte' },
-  { categoria: 'cardio', texto: 'pressão alta tontura dor de cabeça' },
-  { categoria: 'cardio', texto: 'inchaço nas pernas cansaço ao subir escada' },
-  { categoria: 'cardio', texto: 'histórico familiar de infarto quero exame de coração' },
-  { categoria: 'cardio', texto: 'colesterol alto quero acompanhamento cardiológico' },
-  { categoria: 'cardio', texto: 'falta de ar ao fazer esforço físico leve' },
-  { categoria: 'cardio', texto: 'quero fazer um eletrocardiograma de rotina' },
-  { categoria: 'cardio', texto: 'sinto o coração disparado sem motivo' },
-  { categoria: 'cardio', texto: 'pressão descontrolada preciso de acompanhamento' },
-  { categoria: 'cardio', texto: 'quero avaliar minha saúde do coração' },
-  { categoria: 'cardio', texto: 'sinto formigamento no braço esquerdo e peito apertado' },
-  { categoria: 'cardio', texto: 'tontura e coração acelerado depois de esforço' },
-
-  { categoria: 'gineco', texto: 'atraso menstrual quero fazer exame' },
-  { categoria: 'gineco', texto: 'dor pélvica cólica forte fora do período' },
-  { categoria: 'gineco', texto: 'gravidez pré natal acompanhamento gestante' },
-  { categoria: 'gineco', texto: 'exame preventivo papanicolau consulta ginecológica' },
-  { categoria: 'gineco', texto: 'corrimento coceira incômodo íntimo' },
-  { categoria: 'gineco', texto: 'quero começar a tomar anticoncepcional' },
-  { categoria: 'gineco', texto: 'sangramento fora do período menstrual' },
-  { categoria: 'gineco', texto: 'dor durante a relação íntima' },
-  { categoria: 'gineco', texto: 'quero fazer teste de gravidez' },
-  { categoria: 'gineco', texto: 'menstruação muito irregular todo mês' },
-  { categoria: 'gineco', texto: 'quero orientação sobre planejamento familiar' },
-  { categoria: 'gineco', texto: 'dor forte na parte de baixo da barriga mulher' },
-  { categoria: 'gineco', texto: 'consulta ginecologista rotina anual' },
-
-  { categoria: 'clinico', texto: 'dor de cabeça febre corpo cansado' },
-  { categoria: 'clinico', texto: 'gripe resfriado tosse garganta inflamada' },
-  { categoria: 'clinico', texto: 'check up geral exame de rotina' },
-  { categoria: 'clinico', texto: 'dor nas costas mal estar geral' },
-  { categoria: 'clinico', texto: 'quero uma consulta clínica geral' },
-  { categoria: 'clinico', texto: 'dor de garganta espirro nariz entupido' },
-  { categoria: 'clinico', texto: 'quero renovar receita de remédio de pressão' },
-  { categoria: 'clinico', texto: 'exame de sangue de rotina check up anual' },
-  { categoria: 'clinico', texto: 'dor no corpo todo febre baixa cansaço' },
-  { categoria: 'clinico', texto: 'tosse seca persistente há vários dias' },
-  { categoria: 'clinico', texto: 'estou gripado com dor de cabeça e febre' },
-  { categoria: 'clinico', texto: 'preciso de atestado médico simples' },
-  { categoria: 'clinico', texto: 'sinusite nariz entupido dor no rosto' },
-  { categoria: 'clinico', texto: 'diabetes preciso renovar receita de remédio' },
-  { categoria: 'clinico', texto: 'dor muscular cansaço geral sem energia' },
-
-  // sintomas de alarme → encaminhar para urgência, não para agendamento comum
-  { categoria: 'urgencia', texto: 'dor no peito muito forte não consigo respirar' },
-  { categoria: 'urgencia', texto: 'sangramento intenso que não para' },
-  { categoria: 'urgencia', texto: 'desmaiei perdi a consciência' },
-  { categoria: 'urgencia', texto: 'sofri um acidente batida forte' },
-  { categoria: 'urgencia', texto: 'convulsão crise que não passa' },
-  { categoria: 'urgencia', texto: 'engasgado não consegue respirar de jeito nenhum' },
-  { categoria: 'urgencia', texto: 'queimadura grave ferimento profundo' },
-  { categoria: 'urgencia', texto: 'fratura osso quebrado deformidade visível' },
-  { categoria: 'urgencia', texto: 'acidente de moto muito grave preciso de socorro' },
-  { categoria: 'urgencia', texto: 'criança engoliu produto de limpeza envenenamento' },
-  { categoria: 'urgencia', texto: 'corte profundo sangrando muito não estanca' },
-  { categoria: 'urgencia', texto: 'pessoa caiu inconsciente não responde' },
-  { categoria: 'urgencia', texto: 'reação alérgica grave garganta fechando' }
-];
-
-const NOME_ESPECIALIDADE = {
-  dentista: 'Odontologia',
-  pediatra: 'Pediatria',
-  cardio: 'Cardiologia',
-  gineco: 'Ginecologia',
-  clinico: 'Clínico Geral',
-  urgencia: 'Urgência / Emergência'
-};
-
-// abaixo desse valor, a IA prefere "não saber" a arriscar um palpite ruim.
-// (testei bastante: frases sem relação com sintomas costumam ficar
-// abaixo de 0.40 por puro acaso de palavras comuns; matches reais
-// costumam passar de 0.50)
-const LIMIAR_MINIMO = 0.45;
-
-// ── pré-processamento de texto ───────────────────
-const STOPWORDS = new Set(['de','da','do','com','em','para','no','na','um','uma','e','o','a','os','as','meu','minha','está','estou','muito','oi','ola','quero','sobre','informação','informacao','posto','favor','por','quero','saber','gostaria']);
-
-function tokenizar(texto) {
-  return texto
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
-    .replace(/[^a-z0-9\s]/g, '')
-    .split(/\s+/)
-    .filter(t => t && !STOPWORDS.has(t));
-}
-
-// ── construção do vocabulário e do IDF ───────────
-const docsTokenizados = DADOS_TREINO.map(d => tokenizar(d.texto));
-const vocabulario = [...new Set(docsTokenizados.flat())];
-
-function calcularIDF(docs, vocab) {
-  const idf = {};
-  vocab.forEach(termo => {
-    const docsComTermo = docs.filter(doc => doc.includes(termo)).length;
-    idf[termo] = Math.log((docs.length + 1) / (docsComTermo + 1)) + 1;
-  });
-  return idf;
-}
-const IDF = calcularIDF(docsTokenizados, vocabulario);
-
-function vetorTFIDF(tokens) {
-  const tf = {};
-  tokens.forEach(t => { tf[t] = (tf[t] || 0) + 1; });
-  return vocabulario.map(termo => (tf[termo] || 0) * IDF[termo]);
-}
-
-const VETORES_TREINO = docsTokenizados.map(vetorTFIDF);
-
-function similaridadeCosseno(a, b) {
-  let dot = 0, normA = 0, normB = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
+(function () {
+  if (typeof MODELO_IA === 'undefined') {
+    console.error('modelo-ia.js não foi carregado — IA de triagem desativada.');
+    window.classificarSintomas = () => [];
+    window.detectarCrise = () => false;
+    return;
   }
-  if (normA === 0 || normB === 0) return 0;
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
-}
 
-/**
- * Recebe um texto livre de sintomas e devolve um ranking
- * das especialidades mais prováveis, com um score de
- * compatibilidade (0–1). Não é uma probabilidade estatística
- * de verdade — é o quão parecido o texto é com as frases de
- * treino daquela especialidade.
- */
-function classificarSintomas(textoUsuario) {
-  const tokens = tokenizar(textoUsuario);
-  if (!tokens.length) return [];
+  const M = MODELO_IA;
+  const STOP = new Set(M.stopwords);
+  const INDICE = new Map(M.features.map((f, i) => [f, i]));
+  const RE_ALARME = M.sinaisAlarme.map((r) => new RegExp(r));
+  const RE_CRISE = M.sinaisCrise.map((r) => new RegExp(r));
+  const I_URG = M.classes.indexOf('urgencia');
+  const SUGESTAO_SECUNDARIA_MIN = 0.15;
 
-  const vetorUsuario = vetorTFIDF(tokens);
+  function normalizar(texto) {
+    return String(texto).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, ' ')
+      .split(/\s+/).filter(Boolean);
+  }
 
-  const pontuacaoPorCategoria = {};
-  VETORES_TREINO.forEach((vetorTreino, i) => {
-    const categoria = DADOS_TREINO[i].categoria;
-    const score = similaridadeCosseno(vetorUsuario, vetorTreino);
-    pontuacaoPorCategoria[categoria] = Math.max(pontuacaoPorCategoria[categoria] || 0, score);
-  });
+  function extrairFeatures(texto) {
+    const p = normalizar(texto).filter((w) => !STOP.has(w));
+    const f = p.map((w) => 'w:' + w);
+    for (let i = 0; i < p.length - 1; i++) f.push('b:' + p[i] + '_' + p[i + 1]);
+    for (const w of p) {
+      const s = ' ' + w + ' ';
+      for (const n of [3, 4]) {
+        for (let i = 0; i <= s.length - n; i++) f.push('c:' + s.slice(i, i + n));
+      }
+    }
+    return f;
+  }
 
-  return Object.entries(pontuacaoPorCategoria)
-    .map(([categoria, score]) => ({
-      categoria,
-      nome: NOME_ESPECIALIDADE[categoria],
-      compatibilidade: score
-    }))
-    .sort((a, b) => b.compatibilidade - a.compatibilidade)
-    .filter(r => r.compatibilidade >= LIMIAR_MINIMO);
-}
+  // TF-IDF idêntico ao TfidfVectorizer(sublinear_tf=True, norm='l2')
+  function vetorizar(texto) {
+    const contagem = new Map();
+    for (const f of extrairFeatures(texto)) {
+      const j = INDICE.get(f);
+      if (j !== undefined) contagem.set(j, (contagem.get(j) || 0) + 1);
+    }
+    const vet = new Map();
+    let norma = 0;
+    for (const [j, tf] of contagem) {
+      const v = (1 + Math.log(tf)) * M.idf[j];
+      vet.set(j, v);
+      norma += v * v;
+    }
+    norma = Math.sqrt(norma);
+    if (norma > 0) for (const [j, v] of vet) vet.set(j, v / norma);
+    return vet;
+  }
+
+  function probabilidades(texto) {
+    const x = vetorizar(texto);
+    const z = M.classes.map((_, k) => {
+      let s = M.intercept[k];
+      for (const [j, v] of x) s += v * M.coef[k][j];
+      return s;
+    });
+    const max = Math.max(...z);
+    const e = z.map((v) => Math.exp(v - max));
+    const soma = e.reduce((a, b) => a + b, 0);
+    return e.map((v) => v / soma);
+  }
+
+  function detectarCrise(texto) {
+    const t = normalizar(texto).join(' ');
+    return RE_CRISE.some((r) => r.test(t));
+  }
+
+  /**
+   * Retorna [] (abstenção), [{urgencia}] ou até 2 especialidades:
+   *   [{ categoria, nome, compatibilidade }]
+   */
+  function classificarSintomas(texto) {
+    const t = normalizar(texto).join(' ');
+    if (t.length < 3) return [];
+
+    const p = probabilidades(texto);
+
+    if (RE_ALARME.some((r) => r.test(t)) || p[I_URG] >= M.limiarUrgencia) {
+      return [{ categoria: 'urgencia', nome: M.nomes.urgencia, compatibilidade: p[I_URG] }];
+    }
+
+    const ranking = M.classes
+      .map((c, k) => ({ categoria: c, nome: M.nomes[c], compatibilidade: p[k] }))
+      .sort((a, b) => b.compatibilidade - a.compatibilidade);
+
+    const top = ranking[0];
+    if (top.categoria === 'outro' || top.compatibilidade < M.limiarAbstencao) return [];
+
+    return ranking
+      .filter((r) => r.categoria !== 'outro' && r.categoria !== 'urgencia')
+      .filter((r, i) => i === 0 || r.compatibilidade >= SUGESTAO_SECUNDARIA_MIN)
+      .slice(0, 2);
+  }
+
+  // expõe para app.js e para os testes
+  window.classificarSintomas = classificarSintomas;
+  window.detectarCrise = detectarCrise;
+  window._iaInterno = { probabilidades, normalizar };
+})();

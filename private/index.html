@@ -56,7 +56,7 @@
   <section class="page active" id="page-home">
     <div class="search-bar-wrap">
       <div class="search-bar">
-        <input type="text" placeholder="Buscar serviço, especialidade ou descreva um sintoma..." id="searchInput" />
+        <input type="text" placeholder="Buscar serviço, especialidade ou descreva um sintoma..." id="searchInput" maxlength="200" />
         <button class="btn-search"><i class="fas fa-search"></i></button>
       </div>
       <div class="search-hint"><i class="fas fa-robot"></i> Não achou o que procura? Descreva seus sintomas — uma IA sugere a especialidade certa.</div>
@@ -242,6 +242,7 @@
 
 <script src="auth.js"></script>
 <script src="data.js"></script>
+<script src="ml/modelo-ia.js"></script>
 <script src="ml/sintomas-ia.js"></script>
 <script src="app.js"></script>
 </body>

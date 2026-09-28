@@ -1,21 +1,28 @@
 {
   "name": "saude-acessivel",
-  "version": "1.0.0",
-  "description": "Site Saúde Acessível com login (SQLite) e recomendação por IA",
+  "version": "2.0.0",
+  "description": "SaúdeMap IA — portal municipal de saúde com geolocalização e IA de triagem",
   "main": "server.js",
   "engines": {
     "node": "20.x"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "audit": "npm audit --omit=dev",
+    "audit:fix": "npm audit fix --omit=dev",
+    "check:secrets": "node scripts/verificar-segredos.js",
+    "test:ia": "node scripts/testar-ia.js",
+    "verificar": "npm run check:secrets && npm run test:ia && npm run audit"
   },
   "dependencies": {
-    "express": "^4.19.2",
     "@libsql/client": "^0.14.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
-    "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "cookie-parser": "^1.4.6"
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

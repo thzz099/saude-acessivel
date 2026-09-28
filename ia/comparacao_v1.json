@@ -1,0 +1,11 @@
+{
+  "descricao": "IA v1 (TF-IDF caseiro + similaridade de cosseno, ~80 frases) avaliada nos mesmos testes cegos da v2",
+  "teste_c": {
+    "acuracia": 0.4857142857142857,
+    "recall_urgencia": 0.3
+  },
+  "teste_b": {
+    "acuracia": 0.4142857142857143,
+    "recall_urgencia": 0
+  }
+}

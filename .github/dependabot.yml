@@ -1,0 +1,9 @@
+# [20] Scan de dependências: o GitHub verifica toda semana e abre
+# Pull Request automático quando uma biblioteca tiver falha conhecida.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

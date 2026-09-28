@@ -1,2 +1,8 @@
 node_modules/
 .env
+.env.*
+!.env.example
+*.log
+.DS_Store
+ia/modelo-ia.js
+__pycache__/

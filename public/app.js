@@ -2,6 +2,16 @@
    SAÚDE ACESSÍVEL — app.js  (Barra do Garças/MT)
    ============================================= */
 
+
+// ── SEGURANÇA: escape de HTML ────────────────────
+// Todo texto vindo do usuário que for parar em innerHTML passa por aqui.
+// Impede que "<img src=x onerror=...>" digitado na busca vire código executável.
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // ── DATAS: calcula status real das campanhas (não fica desatualizado) ──
 function parseDataBR(str) {
   if (!str || str.toLowerCase() === 'permanente') return null;
@@ -64,6 +74,7 @@ function showToast(msg, duration = 2800) {
 // ── GEOLOCALIZAÇÃO REAL ──────────────────────────
 // Estado global: null enquanto não pedimos, ou {lat, lng} depois que o usuário autoriza
 let userCoords = null;
+let userAccuracy = null; // precisão em metros devolvida pelo navegador
 
 // Fórmula de Haversine: distância (em km) entre dois pontos na superfície da Terra
 function distanciaKm(lat1, lng1, lat2, lng2) {
@@ -91,7 +102,15 @@ function pedirGeolocalizacao() {
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#27ae60"></i> Localização ativada — postos ordenados por distância real';
+      userAccuracy = pos.coords.accuracy; // em metros — quanto menor, mais preciso
+
+      if (userAccuracy > 1500) {
+        // notebook/PC sem GPS costuma estimar por wifi/IP — precisão baixa (as vezes vários km)
+        statusEl.innerHTML = `<i class="fas fa-triangle-exclamation" style="color:#e67e22"></i> Localização aproximada (margem de ~${formatarDistancia(userAccuracy/1000)}) — em computador sem GPS a precisão é menor. Pelo celular fica bem mais exata.`;
+      } else {
+        statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:#27ae60"></i> Localização ativada (precisão de ~${formatarDistancia(userAccuracy/1000)}) — postos ordenados por distância real`;
+      }
+
       renderPostos(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
       // já mostra o trajeto até o posto mais próximo automaticamente
       const maisProximo = getPostoMaisProximo();
@@ -164,6 +183,11 @@ async function mostrarRotaMapa(postoId) {
     className: '', html: '<div class="pin-posto"><i class="fas fa-hospital"></i></div>', iconSize: [30, 30], iconAnchor: [15, 28]
   });
   L.marker(origem, { icon: iconUsuario }).addTo(rotaLayerGroup).bindPopup('Você está aqui');
+  if (userAccuracy) {
+    L.circle(origem, {
+      radius: userAccuracy, color: '#1a73e8', weight: 1, fillColor: '#1a73e8', fillOpacity: 0.08
+    }).addTo(rotaLayerGroup).bindPopup(`Margem de erro: ~${formatarDistancia(userAccuracy/1000)}`);
+  }
   L.marker(destino, { icon: iconPosto }).addTo(rotaLayerGroup).bindPopup(p.nome);
 
   // tenta buscar o trajeto real de carro via OSRM (serviço público gratuito de roteamento)
@@ -226,10 +250,10 @@ function buildPostoCard(p, isNearest = false) {
       </div>
       ${aviso}
       <div class="posto-actions">
-        <button class="btn btn-primary btn-sm" onclick="openPostoModal(${p.id})"><i class="fas fa-info-circle"></i> Detalhes</button>
-        <button class="btn btn-outline btn-sm" onclick="mostrarRotaMapa(${p.id})"><i class="fas fa-route"></i> Ver Rota</button>
-        <button class="btn btn-outline btn-sm" onclick="goMaps(${p.id})"><i class="fas fa-directions"></i> Como Chegar</button>
-        <button class="btn btn-outline btn-sm" onclick="callPosto('${p.telefone}')"><i class="fas fa-phone"></i> Ligar</button>
+        <button class="btn btn-primary btn-sm" data-action="detalhes" data-id="${p.id}"><i class="fas fa-info-circle"></i> Detalhes</button>
+        <button class="btn btn-outline btn-sm" data-action="rota" data-id="${p.id}"><i class="fas fa-route"></i> Ver Rota</button>
+        <button class="btn btn-outline btn-sm" data-action="maps" data-id="${p.id}"><i class="fas fa-directions"></i> Como Chegar</button>
+        <button class="btn btn-outline btn-sm" data-action="ligar" data-id="${p.id}"><i class="fas fa-phone"></i> Ligar</button>
       </div>
     </div>`;
 }
@@ -313,8 +337,8 @@ function openPostoModal(id) {
       <div class="modal-tags">${p.servicos.map(s => `<span class="tag">${s}</span>`).join('')}</div>
     </div>
     ${avisoHtml}
-    <button class="modal-btn" onclick="goMaps(${p.id})"><i class="fas fa-directions"></i> Como Chegar no Google Maps</button>
-    <button class="modal-btn secondary" style="margin-top:8px" onclick="callPosto('${p.telefone}')"><i class="fas fa-phone"></i> Ligar para o Posto</button>
+    <button class="modal-btn" data-action="maps" data-id="${p.id}"><i class="fas fa-directions"></i> Como Chegar no Google Maps</button>
+    <button class="modal-btn secondary" style="margin-top:8px" data-action="ligar" data-id="${p.id}"><i class="fas fa-phone"></i> Ligar para o Posto</button>
   `;
 
   overlay.classList.add('open');
@@ -555,6 +579,21 @@ const searchResults = document.getElementById('searchResults');
 function renderSugestaoIA(query) {
   if (typeof classificarSintomas !== 'function') return false;
 
+  // Prioridade máxima: sinais de crise de saúde mental
+  if (typeof detectarCrise === 'function' && detectarCrise(query)) {
+    searchResults.innerHTML = `
+      <div class="ia-urgencia ia-crise">
+        <div class="ia-urgencia-header"><i class="fas fa-heart"></i> Você não está sozinho(a)</div>
+        <p>Se você está pensando em se machucar, converse com alguém agora. O atendimento é gratuito, sigiloso e funciona 24 horas.</p>
+        <div class="ia-contatos">
+          <a class="btn btn-primary btn-sm" href="tel:188"><i class="fas fa-phone"></i> CVV — 188</a>
+          <a class="btn btn-outline btn-sm" href="tel:192"><i class="fas fa-truck-medical"></i> SAMU — 192</a>
+        </div>
+      </div>`;
+    searchResults.classList.add('open');
+    return true;
+  }
+
   const resultados = classificarSintomas(query);
   if (!resultados.length) return false;
 
@@ -566,7 +605,10 @@ function renderSugestaoIA(query) {
       <div class="ia-urgencia">
         <div class="ia-urgencia-header"><i class="fas fa-triangle-exclamation"></i> Isso pode ser urgente</div>
         <p>Pelos sintomas descritos, procure atendimento imediato. Não espere por agendamento.</p>
-        <button class="btn btn-primary btn-sm" id="btnIrUpa"><i class="fas fa-hospital"></i> Ver UPA 24h mais próxima</button>
+        <div class="ia-contatos">
+          <a class="btn btn-primary btn-sm" href="tel:192"><i class="fas fa-truck-medical"></i> Ligar SAMU — 192</a>
+          <button class="btn btn-outline btn-sm" id="btnIrUpa"><i class="fas fa-hospital"></i> Ver UPA 24h mais próxima</button>
+        </div>
       </div>`;
     searchResults.classList.add('open');
     document.getElementById('btnIrUpa').addEventListener('click', () => {
@@ -585,7 +627,7 @@ function renderSugestaoIA(query) {
   if (!sugestoes.length) return false;
 
   searchResults.innerHTML = `
-    <div class="ia-sugestao-header"><i class="fas fa-robot"></i> IA de triagem: não achamos "${query}" no menu, mas pelos sintomas você provavelmente precisa de:</div>
+    <div class="ia-sugestao-header"><i class="fas fa-robot"></i> IA de triagem: não achamos "${escapeHtml(query)}" no menu, mas pelos sintomas você provavelmente precisa de:</div>
     ${sugestoes.map(s => `
       <div class="search-result-item ia-item" data-categoria="${s.categoria}">
         <i class="fas fa-user-md"></i>
@@ -695,6 +737,9 @@ const extraCSS = `
 .ia-urgencia { padding: 16px; }
 .ia-urgencia-header { color: #c0392b; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .ia-urgencia p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; }
+.ia-contatos { display: flex; gap: 8px; flex-wrap: wrap; }
+.ia-contatos a { text-decoration: none; }
+.ia-crise .ia-urgencia-header { color: #7c3aed; }
 .search-hint { font-size: 0.76rem; color: var(--teal-dark); font-weight: 600; margin-top: 8px; display: flex; align-items: center; gap: 6px; padding-left: 4px; }
 .tag-oficial { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; background: #e6f7ee; color: #1a7f4e; font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: 10px; }
 `;
@@ -801,3 +846,19 @@ function init() {
 }
 
 init();
+
+// ── AÇÕES DOS CARDS (delegação de eventos) ───────
+// Substitui os antigos onclick="..." inline, que a Content-Security-Policy bloqueia.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const posto = POSTOS.find(p => p.id === id);
+  if (!posto) return;
+  switch (btn.dataset.action) {
+    case 'detalhes': openPostoModal(id); break;
+    case 'rota':     mostrarRotaMapa(id); break;
+    case 'maps':     goMaps(id); break;
+    case 'ligar':    callPosto(posto.telefone); break;
+  }
+});

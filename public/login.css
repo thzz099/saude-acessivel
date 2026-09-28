@@ -104,3 +104,6 @@
 
 .login-msg.erro { color: #e74c3c; }
 .login-msg.sucesso { color: #27ae60; }
+
+/* Honeypot anti-bot: fora da tela, mas presente no DOM (display:none alguns bots ignoram) */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

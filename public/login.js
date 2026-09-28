@@ -33,7 +33,7 @@ document.getElementById('formEntrar').addEventListener('submit', async (e) => {
     const resp = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, senha })
+      body: JSON.stringify({ email, senha, website: document.getElementById('hpLogin').value })
     });
     const data = await resp.json();
 
@@ -62,7 +62,7 @@ document.getElementById('formCadastrar').addEventListener('submit', async (e) =>
     const resp = await fetch('/api/registro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, email, senha })
+      body: JSON.stringify({ nome, email, senha, website: document.getElementById('hpRegistro').value })
     });
     const data = await resp.json();
 
