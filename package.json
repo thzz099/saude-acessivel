@@ -16,7 +16,7 @@
     "verificar": "npm run check:secrets && npm run test:backend && npm run test:ia && npm run audit"
   },
   "dependencies": {
-    "@libsql/client": "^0.14.0",
+    "@libsql/client": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
