@@ -43,7 +43,7 @@ document.getElementById('formEntrar').addEventListener('submit', async (e) => {
     }
 
     setMsg('Login realizado! Redirecionando...', 'sucesso');
-    window.location.href = 'index.html';
+    window.location.href = '/';
   } catch (err) {
     setMsg('Erro de conexão com o servidor.', 'erro');
   }
@@ -72,7 +72,7 @@ document.getElementById('formCadastrar').addEventListener('submit', async (e) =>
     }
 
     setMsg('Conta criada! Redirecionando...', 'sucesso');
-    window.location.href = 'index.html';
+    window.location.href = '/';
   } catch (err) {
     setMsg('Erro de conexão com o servidor.', 'erro');
   }

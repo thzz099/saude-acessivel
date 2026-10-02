@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Administrativo — Saúde Acessível</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <div class="admin-logo">
+    <div class="logo-icon"><i class="fas fa-user-shield"></i></div>
+    <div>
+      <strong>Saúde Acessível</strong>
+      <span>Painel do Administrador</span>
+    </div>
+  </div>
+  <div class="admin-header-dir">
+    <span class="indicador-tempo-real" id="indicadorTempoReal" title="Alterações aparecem no site na hora">
+      <span class="ponto"></span> <span class="texto">Conectando...</span>
+    </span>
+    <a href="/" class="admin-link-site"><i class="fas fa-eye"></i> Ver site</a>
+    <span class="admin-usuario" id="adminNome"></span>
+    <a href="#" class="btn-sair" id="btnSair">Sair</a>
+  </div>
+</header>
+
+<div class="admin-layout">
+  <nav class="admin-menu" id="adminMenu" aria-label="Seções do painel"></nav>
+  <main class="admin-conteudo" id="conteudo" aria-live="polite"></main>
+</div>
+
+<!-- Janela de formulário / confirmação -->
+<div class="admin-modal-fundo" id="modalFundo" hidden>
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <div class="admin-modal-topo">
+      <h2 id="modalTitulo"></h2>
+      <button type="button" class="admin-fechar" id="modalFechar" aria-label="Fechar">&times;</button>
+    </div>
+    <div id="modalCorpo"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="/assets/js/admin.js"></script>
+</body>
+</html>

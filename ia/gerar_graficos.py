@@ -4,7 +4,7 @@ gerar_graficos.py — Gráficos do treinamento da IA de triagem (SaúdeMap IA)
 Gera, em ia/graficos/, imagens prontas para slides e relatório.
 Tudo é calculado a partir dos arquivos reais do projeto:
   dataset_treino.csv, relatorio_metricas.json, comparacao_v1.json,
-  ../public/ml/modelo-ia.js (ou modelo-ia.js na pasta atual, no Colab)
+  ../frontend/assets/ml/modelo-ia.js (ou modelo-ia.js na pasta atual, no Colab)
 """
 import csv
 import json
@@ -35,7 +35,7 @@ NOMES = {"cardio": "Cardiologia", "clinico": "Clínico Geral", "dentista": "Odon
 COR_CLASSE = {"urgencia": VERMELHO, "outro": CINZA}
 
 R = json.load(open("relatorio_metricas.json", encoding="utf-8"))
-caminho_modelo = "../public/ml/modelo-ia.js" if os.path.exists("../public/ml/modelo-ia.js") else "modelo-ia.js"
+caminho_modelo = "../frontend/assets/ml/modelo-ia.js" if os.path.exists("../frontend/assets/ml/modelo-ia.js") else "modelo-ia.js"
 src = open(caminho_modelo, encoding="utf-8").read()
 M = json.loads(src[src.index("{"):src.rindex("}") + 1])
 

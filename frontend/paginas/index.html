@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Saúde Acessível</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -25,6 +25,7 @@
       <a href="#" class="nav-link" data-page="vacinacao"><i class="fas fa-syringe"></i> Vacinação</a>
       <a href="#" class="nav-link" data-page="profissionais"><i class="fas fa-user-md"></i> Profissionais</a>
       <a href="#" class="nav-link" data-page="calendario"><i class="fas fa-calendar-alt"></i> Calendário</a>
+      <a href="/admin" class="nav-link link-admin" hidden><i class="fas fa-user-shield"></i> Admin</a>
     </nav>
     <div class="header-user">
       <div class="user-avatar" id="userAvatar">?</div>
@@ -42,6 +43,7 @@
   <a href="#" class="nav-link" data-page="vacinacao"><i class="fas fa-syringe"></i> Vacinação</a>
   <a href="#" class="nav-link" data-page="profissionais"><i class="fas fa-user-md"></i> Profissionais</a>
   <a href="#" class="nav-link" data-page="calendario"><i class="fas fa-calendar-alt"></i> Calendário</a>
+  <a href="/admin" class="nav-link link-admin" hidden><i class="fas fa-user-shield"></i> Painel Admin</a>
   <div class="mobile-nav-user">
     <div class="user-avatar" id="userAvatarMobile">?</div>
     <span id="userNomeMobile">Carregando...</span>
@@ -100,11 +102,8 @@
       <aside class="home-sidebar">
         <div class="sidebar-card horarios-card">
           <h3><i class="fas fa-clock"></i> Horários de Hoje</h3>
-          <ul class="horario-list">
-            <li><span class="dot dot-blue"><i class="fas fa-tooth"></i></span><div><strong>Dentista</strong><span>8h00 – 12h00</span></div></li>
-            <li><span class="dot dot-green"><i class="fas fa-stethoscope"></i></span><div><strong>Clínico Geral</strong><span>13h00 – 17h00</span></div></li>
-            <li><span class="dot dot-teal"><i class="fas fa-baby"></i></span><div><strong>Pediatra</strong><span>14h00 – 18h00</span></div></li>
-            <li><span class="dot dot-orange"><i class="fas fa-heartbeat"></i></span><div><strong>Cardiologista</strong><span>9h00 – 12h00</span></div></li>
+          <ul class="horario-list" id="horarioList">
+            <li class="carregando">Carregando...</li>
           </ul>
         </div>
       </aside>
@@ -240,10 +239,10 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="auth.js"></script>
-<script src="data.js"></script>
-<script src="ml/modelo-ia.js"></script>
-<script src="ml/sintomas-ia.js"></script>
-<script src="app.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/dados.js"></script>
+<script src="/assets/ml/modelo-ia.js"></script>
+<script src="/assets/ml/sintomas-ia.js"></script>
+<script src="/assets/js/app.js"></script>
 </body>
 </html>

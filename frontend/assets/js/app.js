@@ -11,6 +11,10 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
+// Todo dado vindo do banco passa por esc() antes de ir para o HTML.
+// O servidor já recusa < e >; esta é a segunda camada (defesa em profundidade).
+const esc = (v) => escapeHtml(v == null ? '' : v);
+const corSegura = (c, padrao) => (/^#[0-9a-fA-F]{6}$/.test(c) ? c : padrao);
 
 // ── DATAS: calcula status real das campanhas (não fica desatualizado) ──
 function parseDataBR(str) {
@@ -188,7 +192,7 @@ async function mostrarRotaMapa(postoId) {
       radius: userAccuracy, color: '#1a73e8', weight: 1, fillColor: '#1a73e8', fillOpacity: 0.08
     }).addTo(rotaLayerGroup).bindPopup(`Margem de erro: ~${formatarDistancia(userAccuracy/1000)}`);
   }
-  L.marker(destino, { icon: iconPosto }).addTo(rotaLayerGroup).bindPopup(p.nome);
+  L.marker(destino, { icon: iconPosto }).addTo(rotaLayerGroup).bindPopup(esc(p.nome));
 
   // tenta buscar o trajeto real de carro via OSRM (serviço público gratuito de roteamento)
   try {
@@ -226,7 +230,7 @@ const statusLabel = { aberto: 'Aberto', fechado: 'Fechado', urgencia: 'Urgência
 const statusColor = { aberto: '#27ae60', fechado: '#e74c3c', urgencia: '#e67e22' };
 
 function buildPostoCard(p, isNearest = false) {
-  const aviso = p.aviso ? `<div class="posto-aviso"><i class="fas fa-exclamation-triangle"></i> ${p.obs}</div>` : '';
+  const aviso = p.aviso ? `<div class="posto-aviso"><i class="fas fa-exclamation-triangle"></i> ${esc(p.obs)}</div>` : '';
   const distTxt = userCoords
     ? formatarDistancia(distanciaKm(userCoords.lat, userCoords.lng, p.lat, p.lng))
     : 'ative a localização';
@@ -235,17 +239,17 @@ function buildPostoCard(p, isNearest = false) {
     <div class="posto-card${isNearest ? ' posto-nearest' : ''}" data-id="${p.id}" data-status="${p.status}">
       <div class="posto-header">
         <div>
-          <h3 class="posto-nome">${p.nome}</h3>
+          <h3 class="posto-nome">${esc(p.nome)}</h3>
           <div class="posto-dist"><i class="fas fa-location-arrow"></i> ${distTxt} ${nearestBadge}</div>
         </div>
         <span class="status-badge" style="background:${statusColor[p.status]}20;color:${statusColor[p.status]};border:1.5px solid ${statusColor[p.status]}40">
           <i class="fas fa-circle" style="font-size:0.55rem"></i> ${statusLabel[p.status]}
         </span>
       </div>
-      <div class="posto-info"><i class="fas fa-map-marker-alt"></i> ${p.endereco}</div>
-      <div class="posto-info"><i class="fas fa-clock"></i> ${p.horario}</div>
+      <div class="posto-info"><i class="fas fa-map-marker-alt"></i> ${esc(p.endereco)}</div>
+      <div class="posto-info"><i class="fas fa-clock"></i> ${esc(p.horario)}</div>
       <div class="posto-tags">
-        ${p.servicos.slice(0,3).map(s => `<span class="tag">${s}</span>`).join('')}
+        ${p.servicos.slice(0,3).map(s => `<span class="tag">${esc(s)}</span>`).join('')}
         ${p.servicos.length > 3 ? `<span class="tag tag-more">+${p.servicos.length - 3}</span>` : ''}
       </div>
       ${aviso}
@@ -306,7 +310,7 @@ function openPostoModal(id) {
     <div class="modal-section">
       <h4><i class="fas fa-info-circle"></i> Observação</h4>
       <div class="modal-row" style="background:var(--orange-light);border-radius:8px;padding:10px 14px;color:#c0650e;">
-        <i class="fas fa-exclamation-triangle" style="color:#e67e22"></i> ${p.obs}
+        <i class="fas fa-exclamation-triangle" style="color:#e67e22"></i> ${esc(p.obs)}
       </div>
     </div>` : '';
 
@@ -316,7 +320,7 @@ function openPostoModal(id) {
         <i class="fas fa-hospital" style="color:${statusColor[p.status]};font-size:1.4rem"></i>
       </div>
       <div>
-        <div class="modal-title">${p.nome}</div>
+        <div class="modal-title">${esc(p.nome)}</div>
         <span class="status-badge" style="background:${statusColor[p.status]}20;color:${statusColor[p.status]};border:1.5px solid ${statusColor[p.status]}40;font-size:0.75rem;padding:3px 10px;border-radius:12px;font-weight:700">
           <i class="fas fa-circle" style="font-size:0.5rem"></i> ${statusLabel[p.status]}
         </span>
@@ -324,17 +328,17 @@ function openPostoModal(id) {
     </div>
     <div class="modal-section">
       <h4><i class="fas fa-map-marker-alt"></i> Localização & Contato</h4>
-      <div class="modal-row"><i class="fas fa-map-marker-alt"></i> ${p.endereco}</div>
-      <div class="modal-row"><i class="fas fa-phone"></i> ${p.telefone || 'Telefone a confirmar'}</div>
+      <div class="modal-row"><i class="fas fa-map-marker-alt"></i> ${esc(p.endereco)}</div>
+      <div class="modal-row"><i class="fas fa-phone"></i> ${esc(p.telefone || 'Telefone a confirmar')}</div>
       <div class="modal-row"><i class="fas fa-location-arrow"></i> ${userCoords ? formatarDistancia(distanciaKm(userCoords.lat, userCoords.lng, p.lat, p.lng)) + ' de distância' : 'ative a localização para ver a distância'}</div>
     </div>
     <div class="modal-section">
       <h4><i class="fas fa-clock"></i> Horário de Funcionamento</h4>
-      <div class="modal-row"><i class="fas fa-clock"></i> ${p.horario}</div>
+      <div class="modal-row"><i class="fas fa-clock"></i> ${esc(p.horario)}</div>
     </div>
     <div class="modal-section">
       <h4><i class="fas fa-stethoscope"></i> Serviços Disponíveis</h4>
-      <div class="modal-tags">${p.servicos.map(s => `<span class="tag">${s}</span>`).join('')}</div>
+      <div class="modal-tags">${p.servicos.map(s => `<span class="tag">${esc(s)}</span>`).join('')}</div>
     </div>
     ${avisoHtml}
     <button class="modal-btn" data-action="maps" data-id="${p.id}"><i class="fas fa-directions"></i> Como Chegar no Google Maps</button>
@@ -370,13 +374,13 @@ function renderAvisos() {
   const avisosCampanhas = campanhasRelevantes.map(c => {
     const classe = c.statusCalc === 'breve' ? 'info' : 'success';
     const icone = c.statusCalc === 'breve' ? 'fa-clock' : 'fa-syringe';
-    const periodo = c.inicio === 'Permanente' ? 'disponível o ano todo' : `${c.inicio}–${c.fim}`;
+    const periodo = c.inicio === 'Permanente' ? 'disponível o ano todo' : `${esc(c.inicio)}–${esc(c.fim)}`;
     const prefixo = c.statusCalc === 'breve' ? 'Em breve: ' : '';
-    return `<div class="aviso ${classe}"><i class="fas ${icone}"></i><span>${prefixo}<strong>${c.nome}</strong> (${periodo}). ${c.desc}</span></div>`;
+    return `<div class="aviso ${classe}"><i class="fas ${icone}"></i><span>${prefixo}<strong>${esc(c.nome)}</strong> (${periodo}). ${esc(c.desc)}</span></div>`;
   });
 
   const avisosFixos = AVISOS_GERAIS.map(a =>
-    `<div class="aviso ${a.tipo}"><i class="fas ${a.icone}"></i><span>${a.texto}</span></div>`
+    `<div class="aviso ${esc(a.tipo)}"><i class="fas ${esc(a.icone)}"></i><span>${esc(a.texto)}</span></div>`
   );
 
   const todos = [...avisosCampanhas, ...avisosFixos];
@@ -392,16 +396,16 @@ function buildCampanhaCard(c) {
   const statusTxt   = { ativa: '✅ Ativa', breve: '🔜 Em breve', encerrada: '🔴 Encerrada' }[status] || '';
   return `
     <div class="campanha-card${status === 'encerrada' ? ' campanha-encerrada' : ''}">
-      <div class="campanha-banner" style="background:${c.corBg}">
-        <span style="font-size:2.4rem">${c.icone}</span>
+      <div class="campanha-banner" style="background:${corSegura(c.corBg, '#e0f7f5')}">
+        <span style="font-size:2.4rem">${esc(c.icone)}</span>
       </div>
       <div class="campanha-body">
-        <h3>${c.nome}</h3>
-        <p>${c.desc}</p>
-        <p style="margin-top:8px;font-size:0.78rem;color:var(--teal-dark)"><i class="fas fa-map-marker-alt"></i> ${c.postos.join(', ')}</p>
+        <h3>${esc(c.nome)}</h3>
+        <p>${esc(c.desc)}</p>
+        <p style="margin-top:8px;font-size:0.78rem;color:var(--teal-dark)"><i class="fas fa-map-marker-alt"></i> ${esc(c.postos.join(', ') || 'Unidades a definir')}</p>
         <div class="campanha-meta">
           <span class="status-pill ${statusClass}">${statusTxt}</span>
-          <span class="vacina-date">${c.inicio} → ${c.fim}</span>
+          <span class="vacina-date">${esc(c.inicio)} → ${esc(c.fim)}</span>
         </div>
       </div>
     </div>`;
@@ -410,12 +414,12 @@ function buildCampanhaCard(c) {
 function buildCalVacinalRow(v) {
   return `
     <div class="cal-vacinal-row">
-      <span class="faixa-etaria">${v.faixa}</span>
+      <span class="faixa-etaria">${esc(v.faixa)}</span>
       <div style="flex:1">
-        <div class="vacina-nome">${v.vacina}</div>
-        <div class="vacina-doses">${v.doses}</div>
+        <div class="vacina-nome">${esc(v.vacina)}</div>
+        <div class="vacina-doses">${esc(v.doses)}</div>
       </div>
-      ${v.obs ? `<div class="vacina-obs"><i class="fas fa-info-circle" style="color:var(--teal)"></i> ${v.obs}</div>` : ''}
+      ${v.obs ? `<div class="vacina-obs"><i class="fas fa-info-circle" style="color:var(--teal)"></i> ${esc(v.obs)}</div>` : ''}
     </div>`;
 }
 
@@ -424,8 +428,8 @@ function buildHistoricoCard(h) {
     <div class="hist-card">
       <div class="hist-check"><i class="fas fa-check"></i></div>
       <div class="hist-info">
-        <h4>${h.vacina}</h4>
-        <p><i class="fas fa-calendar-alt"></i> ${h.data} &nbsp;|&nbsp; <i class="fas fa-map-marker-alt"></i> ${h.posto} &nbsp;|&nbsp; ${h.dose}</p>
+        <h4>${esc(h.vacina)}</h4>
+        <p><i class="fas fa-calendar-alt"></i> ${esc(h.data)} &nbsp;|&nbsp; <i class="fas fa-map-marker-alt"></i> ${esc(h.posto)} &nbsp;|&nbsp; ${esc(h.dose)}</p>
       </div>
     </div>`;
 }
@@ -452,11 +456,11 @@ function buildProfCard(p) {
     ? `<span class="tag-oficial"><i class="fas fa-shield-check"></i> Confirmado pela Secretaria</span>` : '';
   return `
     <div class="prof-card">
-      <div class="prof-avatar" style="border-color:${color}30;color:${color}">${p.init}</div>
-      <div class="prof-name">${p.nome}</div>
-      <div class="prof-esp" style="color:${color}">${p.esp}</div>
-      <div class="prof-horario"><i class="fas fa-clock"></i> ${p.horario}</div>
-      <div class="prof-posto"><i class="fas fa-map-marker-alt"></i> ${p.posto}</div>
+      <div class="prof-avatar" style="border-color:${color}30;color:${color}">${esc(p.init)}</div>
+      <div class="prof-name">${esc(p.nome)}</div>
+      <div class="prof-esp" style="color:${color}">${esc(p.esp)}</div>
+      <div class="prof-horario"><i class="fas fa-clock"></i> ${esc(p.horario)}</div>
+      <div class="prof-posto"><i class="fas fa-map-marker-alt"></i> ${esc(p.posto)}</div>
       ${badge}
       ${oficialTag}
     </div>`;
@@ -553,9 +557,9 @@ function showCalEvents(dateFilter) {
         <div class="event-dot-big" style="background:${tipoColor[e.tipo] || '#888'}"></div>
       </div>
       <div>
-        <div class="event-title">${e.titulo}</div>
+        <div class="event-title">${esc(e.titulo)}</div>
         <div class="event-date">${e.data.split('-').reverse().join('/')}</div>
-        <div class="event-desc">${e.desc}</div>
+        <div class="event-desc">${esc(e.desc)}</div>
       </div>
     </div>`).join('');
 }
@@ -792,11 +796,11 @@ function openCalModal(dateStr) {
                 <i class="${tipoIcon[e.tipo]}" style="color:${tipoColor2[e.tipo]};font-size:0.75rem"></i>
               </div>
               <div>
-                <div style="font-weight:700;font-size:0.9rem;line-height:1.2">${e.titulo}</div>
+                <div style="font-weight:700;font-size:0.9rem;line-height:1.2">${esc(e.titulo)}</div>
                 <span style="font-size:0.68rem;font-weight:700;color:${tipoColor2[e.tipo]};text-transform:uppercase;letter-spacing:0.04em">${tipoLabel[e.tipo]}</span>
               </div>
             </div>
-            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.55;margin:0">${e.desc}</p>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.55;margin:0">${esc(e.desc)}</p>
           </div>`).join('')}
       </div>`;
   }
@@ -833,16 +837,67 @@ function injectClockElement() {
   startRealtimeClock();
 }
 
-// ── INIT ────────────────────────────────────────
-function init() {
-  renderPostos('all');
-  document.getElementById('campanhasGrid').innerHTML = CAMPANHAS.map(buildCampanhaCard).join('');
-  document.getElementById('calVacinal').innerHTML = CALENDARIO_VACINAL.map(buildCalVacinalRow).join('');
-  document.getElementById('historicoCards').innerHTML = HISTORICO.map(buildHistoricoCard).join('');
-  renderProfissionais('todos');
+// ── HORÁRIOS DE HOJE (antes era fixo no HTML; agora vem dos profissionais) ──
+const ICONE_CATEGORIA = { clinico: 'fa-stethoscope', pediatra: 'fa-baby', dentista: 'fa-tooth', cardio: 'fa-heartbeat', gineco: 'fa-venus' };
+const DOT_CATEGORIA = { clinico: 'dot-green', pediatra: 'dot-teal', dentista: 'dot-blue', cardio: 'dot-orange', gineco: 'dot-orange' };
+
+function renderHorariosHoje() {
+  const lista = document.getElementById('horarioList');
+  if (!lista) return;
+  const disponiveis = PROFISSIONAIS.filter(p => p.disponivel).slice(0, 5);
+  if (!disponiveis.length) {
+    lista.innerHTML = '<li><div><span>Nenhum profissional disponível no momento.</span></div></li>';
+    return;
+  }
+  lista.innerHTML = disponiveis.map(p => `
+    <li>
+      <span class="dot ${DOT_CATEGORIA[p.categoria] || 'dot-green'}"><i class="fas ${ICONE_CATEGORIA[p.categoria] || 'fa-user-md'}"></i></span>
+      <div><strong>${esc(p.esp)}</strong><span>${esc(p.horario)} · ${esc(p.posto)}</span></div>
+    </li>`).join('');
+}
+
+const vazio = (msg) => `<p style="color:var(--text-muted);font-size:0.88rem;padding:16px 4px">${msg}</p>`;
+
+// ── RENDERIZAÇÃO GERAL (usada na carga e a cada atualização em tempo real) ──
+function renderTudo() {
+  // preserva os filtros que o usuário escolheu
+  renderPostos(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
+  renderProfissionais(document.querySelector('.esp-btn.active')?.dataset.esp || 'todos');
+
+  document.getElementById('campanhasGrid').innerHTML =
+    CAMPANHAS.length ? CAMPANHAS.map(buildCampanhaCard).join('') : vazio('Nenhuma campanha cadastrada.');
+  document.getElementById('calVacinal').innerHTML =
+    CALENDARIO_VACINAL.length ? CALENDARIO_VACINAL.map(buildCalVacinalRow).join('') : vazio('Calendário vacinal não cadastrado.');
+  document.getElementById('historicoCards').innerHTML = HISTORICO.length
+    ? HISTORICO.map(buildHistoricoCard).join('')
+    : vazio('Nenhuma vacina registrada ainda. Os registros são feitos pela equipe da unidade de saúde após a aplicação.');
+
   renderCalendario();
   renderAvisos();
+  renderHorariosHoje();
+}
+
+// ── INIT ────────────────────────────────────────
+async function init() {
   injectClockElement();
+  try {
+    await carregarDados();
+    renderTudo();
+  } catch (e) {
+    console.error(e);
+    showToast('Não foi possível carregar as informações. Recarregue a página.', 5000);
+    return;
+  }
+  // Tempo real: alteração feita no painel admin aparece aqui sem recarregar
+  conectarTempoReal(async () => {
+    try {
+      await carregarDados();
+      renderTudo();
+      showToast('🔄 Informações atualizadas pela Secretaria de Saúde');
+    } catch (e) {
+      console.error(e);
+    }
+  });
 }
 
 init();

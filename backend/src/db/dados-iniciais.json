@@ -1,0 +1,661 @@
+{
+  "unidades": [
+    {
+      "nome": "UBS Centro",
+      "status": "aberto",
+      "endereco": "Rua 1º de Maio, s/nº — Centro (em frente ao Correios), Barra do Garças/MT",
+      "telefone": "(66) 99224-1972",
+      "horario": "Seg–Sex: 7h–11h e 13h–17h",
+      "latitude": -15.8909938,
+      "longitude": -52.25728,
+      "observacao": "Dados oficiais (Prefeitura): coordenadora Enfª. Danielle Carmo Pitaluga Araujo; médica Drª Claúdia Fernanda Bueno da Silva.",
+      "destacar_observacao": 0,
+      "dados_oficiais": 1,
+      "servicos": [
+        "Clínico Geral",
+        "Enfermagem",
+        "Vacinação",
+        "Pré-natal"
+      ]
+    },
+    {
+      "nome": "UBS Anchieta",
+      "status": "aberto",
+      "endereco": "Av. Anchieta, s/nº — Anchieta, Barra do Garças/MT",
+      "telefone": "(66) 99263-1663",
+      "horario": "Seg–Sex: 7h–11h e 13h–17h",
+      "latitude": -15.8798443,
+      "longitude": -52.2316507,
+      "observacao": "Dados oficiais (Prefeitura): coordenadora Enfª. Lorena Carvalho Adorno; médica Drª Elis Daiana Ferreira Soares.",
+      "destacar_observacao": 0,
+      "dados_oficiais": 1,
+      "servicos": [
+        "Clínico Geral",
+        "Vacinação",
+        "Enfermagem",
+        "Pediatria"
+      ]
+    },
+    {
+      "nome": "UPA Barra do Garças",
+      "status": "urgencia",
+      "endereco": "Barra do Garças/MT (região central)",
+      "telefone": "(66) 3401-9163",
+      "horario": "24 horas — 7 dias por semana",
+      "latitude": -15.8761533,
+      "longitude": -52.298838,
+      "observacao": "Endereço e telefone via Google Places — a confirmar oficialmente. Atendimento contínuo, levar documento e cartão SUS.",
+      "destacar_observacao": 1,
+      "dados_oficiais": 0,
+      "servicos": [
+        "Urgência/Emergência",
+        "Raio-X",
+        "Laboratório",
+        "Observação",
+        "Medicação",
+        "Suturas"
+      ]
+    },
+    {
+      "nome": "UBS São Benedito",
+      "status": "aberto",
+      "endereco": "R. Moreira Cabral, 59 — São Sebastião, Barra do Garças/MT",
+      "telefone": "(66) 99269-6006",
+      "horario": "Seg–Sex: 7h–11h e 13h–17h",
+      "latitude": -15.8999351,
+      "longitude": -52.2630006,
+      "observacao": "Telefone confirmado oficialmente. Nome da médica responsável a confirmar com a Secretaria.",
+      "destacar_observacao": 0,
+      "dados_oficiais": 1,
+      "servicos": [
+        "Clínico Geral",
+        "Enfermagem",
+        "Curativos",
+        "Tele Enfermeiro"
+      ]
+    },
+    {
+      "nome": "Hospital Municipal Milton Pessoa Morbeck",
+      "status": "urgencia",
+      "endereco": "Tv. Mal. Rondon, 2897 — Jardim Mariano, Barra do Garças/MT",
+      "telefone": "(66) 3401-2363",
+      "horario": "24 horas — 7 dias por semana",
+      "latitude": -15.883748,
+      "longitude": -52.247028,
+      "observacao": "Endereço e telefone via Google Places — a confirmar oficialmente. Referência para partos e internações da região.",
+      "destacar_observacao": 1,
+      "dados_oficiais": 0,
+      "servicos": [
+        "Urgência/Emergência",
+        "Maternidade",
+        "Internação",
+        "Cirurgia"
+      ]
+    },
+    {
+      "nome": "UBS Jardim Araguaia",
+      "status": "aberto",
+      "endereco": "Jardim Araguaia (COAHB), Barra do Garças/MT",
+      "telefone": "(66) 99263-7286",
+      "horario": "Seg–Sex: 7h–11h e 13h–17h",
+      "latitude": -15.8690522,
+      "longitude": -52.2756467,
+      "observacao": "Telefone confirmado oficialmente. Nome do(a) médico(a) responsável a confirmar com a Secretaria.",
+      "destacar_observacao": 0,
+      "dados_oficiais": 1,
+      "servicos": [
+        "Clínico Geral",
+        "Vacinação",
+        "Enfermagem"
+      ]
+    },
+    {
+      "nome": "UBS Jardim Nova Barra II",
+      "status": "aberto",
+      "endereco": "Rua Itapajós, Qd 517, lotes 20-23 — Nova Barra, Barra do Garças/MT",
+      "telefone": "(66) 99262-4719",
+      "horario": "Seg–Sex: 7h–11h e 13h–17h",
+      "latitude": -15.8918552,
+      "longitude": -52.3087539,
+      "observacao": "Dados oficiais (Prefeitura): coordenadora Enfª. Eduarda Carolina Mota Vasconcelos; médico Drº Arthur Rezende Silva.",
+      "destacar_observacao": 0,
+      "dados_oficiais": 1,
+      "servicos": [
+        "Clínico Geral",
+        "Enfermagem",
+        "Pré-natal"
+      ]
+    }
+  ],
+  "profissionais": [
+    {
+      "nome": "Drª Claúdia Fernanda Bueno da Silva",
+      "especialidade": "Clínico Geral",
+      "categoria": "clinico",
+      "horario": "Seg–Sex: 7h–11h / 13h–17h",
+      "unidade": "UBS Centro",
+      "disponivel": 1,
+      "dados_oficiais": 1
+    },
+    {
+      "nome": "Drª Elis Daiana Ferreira Soares",
+      "especialidade": "Clínico Geral",
+      "categoria": "clinico",
+      "horario": "Seg–Sex: 7h–11h / 13h–17h",
+      "unidade": "UBS Anchieta",
+      "disponivel": 1,
+      "dados_oficiais": 1
+    },
+    {
+      "nome": "Drº Arthur Rezende Silva",
+      "especialidade": "Clínico Geral",
+      "categoria": "clinico",
+      "horario": "Seg–Sex: 7h–11h / 13h–17h",
+      "unidade": "UBS Jardim Nova Barra II",
+      "disponivel": 1,
+      "dados_oficiais": 1
+    },
+    {
+      "nome": "Dra. Ana Lima",
+      "especialidade": "Pediatra",
+      "categoria": "pediatra",
+      "horario": "Seg/Qua/Sex: 14h–18h (a confirmar)",
+      "unidade": "UBS Jardim Araguaia",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dr. Carlos Souza",
+      "especialidade": "Dentista",
+      "categoria": "dentista",
+      "horario": "Seg–Sex: 8h–12h (a confirmar)",
+      "unidade": "UBS Centro",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dra. Fernanda Costa",
+      "especialidade": "Cardiologista",
+      "categoria": "cardio",
+      "horario": "Ter/Qui: 9h–12h (a confirmar)",
+      "unidade": "Hospital Municipal Milton Pessoa Morbeck",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dra. Patrícia Rocha",
+      "especialidade": "Ginecologista",
+      "categoria": "gineco",
+      "horario": "Ter/Qui: 7h–12h (a confirmar)",
+      "unidade": "Hospital Municipal Milton Pessoa Morbeck",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dra. Juliana Torres",
+      "especialidade": "Pediatra",
+      "categoria": "pediatra",
+      "horario": "Seg/Qua/Sex: 8h–12h (a confirmar)",
+      "unidade": "UBS Centro",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dr. Marcos Vieira",
+      "especialidade": "Dentista",
+      "categoria": "dentista",
+      "horario": "Ter/Qui/Sex: 8h–12h (a confirmar)",
+      "unidade": "UBS Jardim Araguaia",
+      "disponivel": 0,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dr. Thiago Batista",
+      "especialidade": "Cardiologista",
+      "categoria": "cardio",
+      "horario": "Seg/Qua: 9h–13h (a confirmar)",
+      "unidade": "Hospital Municipal Milton Pessoa Morbeck",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dra. Camila Nunes",
+      "especialidade": "Ginecologista",
+      "categoria": "gineco",
+      "horario": "Seg/Qua/Sex: 13h–17h (a confirmar)",
+      "unidade": "UBS Jardim Araguaia",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    },
+    {
+      "nome": "Dr. Eduardo Pires",
+      "especialidade": "Dentista",
+      "categoria": "dentista",
+      "horario": "Seg–Sex: 13h–17h (a confirmar)",
+      "unidade": "UBS São Benedito",
+      "disponivel": 1,
+      "dados_oficiais": 0
+    }
+  ],
+  "campanhas": [
+    {
+      "nome": "Vacinação contra Dengue (Qdenga)",
+      "descricao": "Vacina Qdenga para adolescentes de 10 a 14 anos, incorporada ao SUS em 2026. Expansão para 15–59 anos prevista para o 2º semestre, começando pelos profissionais de saúde.",
+      "icone": "🦟",
+      "cor": "#f39c12",
+      "cor_fundo": "#fffbea",
+      "permanente": 1,
+      "data_inicio": null,
+      "data_fim": null,
+      "todas_unidades": 0,
+      "unidades": [
+        "UBS Centro",
+        "UBS Anchieta",
+        "UBS Jardim Araguaia"
+      ]
+    },
+    {
+      "nome": "Vacinação Contra Gripe 2026",
+      "descricao": "Campanha nacional de vacinação contra influenza. Prioritários: idosos (60+), gestantes, crianças de 6 meses a 6 anos e trabalhadores da saúde.",
+      "icone": "🤧",
+      "cor": "#3b82f6",
+      "cor_fundo": "#e8f4fd",
+      "permanente": 0,
+      "data_inicio": "2026-03-28",
+      "data_fim": "2026-05-30",
+      "todas_unidades": 0,
+      "unidades": [
+        "UBS Centro",
+        "UBS São Benedito",
+        "UBS Anchieta",
+        "UBS Jardim Nova Barra II"
+      ]
+    },
+    {
+      "nome": "Multivacinação 2026",
+      "descricao": "Atualização da caderneta vacinal, incluindo a nova Pneumocócica 20-valente. Vacinação seletiva — leve a caderneta de vacinação.",
+      "icone": "👶",
+      "cor": "#27ae60",
+      "cor_fundo": "#eafaf1",
+      "permanente": 0,
+      "data_inicio": "2026-08-03",
+      "data_fim": "2026-09-01",
+      "todas_unidades": 1,
+      "unidades": []
+    },
+    {
+      "nome": "Hepatite B — Adultos",
+      "descricao": "Imunização contra hepatite B para adultos que ainda não completaram o esquema vacinal de 3 doses. Disponível durante todo o ano nos postos.",
+      "icone": "💉",
+      "cor": "#8e44ad",
+      "cor_fundo": "#f5eef8",
+      "permanente": 1,
+      "data_inicio": null,
+      "data_fim": null,
+      "todas_unidades": 0,
+      "unidades": [
+        "UBS Centro",
+        "UBS São Benedito",
+        "UBS Jardim Nova Barra II"
+      ]
+    },
+    {
+      "nome": "Vacina BCG Neonatal",
+      "descricao": "Aplicação da BCG em recém-nascidos. Realizada na maternidade ou no posto nas primeiras 24h de vida. Obrigatória pelo calendário nacional de vacinação.",
+      "icone": "🍼",
+      "cor": "#0dbdad",
+      "cor_fundo": "#e0f7f5",
+      "permanente": 1,
+      "data_inicio": null,
+      "data_fim": null,
+      "todas_unidades": 0,
+      "unidades": [
+        "UBS Centro",
+        "Hospital Municipal Milton Pessoa Morbeck",
+        "UBS Anchieta"
+      ]
+    },
+    {
+      "nome": "HPV — Meninas e Meninos",
+      "descricao": "Vacina HPV quadrivalente para meninas (9–14 anos) e meninos (11–14 anos). Duas doses com intervalo de 6 meses. Disponível durante o ano letivo nas UBS.",
+      "icone": "🎀",
+      "cor": "#e74c3c",
+      "cor_fundo": "#fdecea",
+      "permanente": 0,
+      "data_inicio": "2026-02-01",
+      "data_fim": "2026-10-31",
+      "todas_unidades": 0,
+      "unidades": [
+        "UBS Centro",
+        "UBS Jardim Araguaia",
+        "UBS São Benedito"
+      ]
+    }
+  ],
+  "eventos": [
+    {
+      "data": "2026-05-12",
+      "titulo": "Dia Internacional da Enfermagem",
+      "tipo": "evento",
+      "descricao": "Comemoração do Dia Internacional da Enfermagem em todos os postos de Barra do Garças."
+    },
+    {
+      "data": "2026-05-14",
+      "titulo": "Campanha Gripe em andamento",
+      "tipo": "campanha",
+      "descricao": "Vacinação contra influenza 2026 em andamento. Prioritários: idosos 60+, gestantes e crianças até 6 anos."
+    },
+    {
+      "data": "2026-05-20",
+      "titulo": "Dia Mundial da Hipertensão",
+      "tipo": "evento",
+      "descricao": "Medição gratuita de pressão arterial em todas as UBS de Barra do Garças. Sem agendamento."
+    },
+    {
+      "data": "2026-05-21",
+      "titulo": "Dia Nacional da Hipertensão",
+      "tipo": "evento",
+      "descricao": "Ações de conscientização sobre hipertensão arterial. Palestras na UBS Centro e UBS Novo Horizonte."
+    },
+    {
+      "data": "2026-05-25",
+      "titulo": "Dia do Orgulho Autista — MT",
+      "tipo": "evento",
+      "descricao": "Evento de conscientização sobre autismo. Informações sobre serviços especializados no CEM."
+    },
+    {
+      "data": "2026-05-30",
+      "titulo": "Dia Nacional da Esclerose Múltipla",
+      "tipo": "evento",
+      "descricao": "Conscientização sobre EM. Fale com seu médico no CEM sobre sintomas e diagnóstico precoce."
+    },
+    {
+      "data": "2026-05-31",
+      "titulo": "Dia Mundial Sem Tabaco",
+      "tipo": "evento",
+      "descricao": "OMS — Ações de conscientização em todos os postos. Apoio para cessação do tabagismo disponível no CEM."
+    },
+    {
+      "data": "2026-05-30",
+      "titulo": "Encerramento Campanha Gripe 2026",
+      "tipo": "campanha",
+      "descricao": "Último dia da campanha de vacinação contra influenza 2026."
+    },
+    {
+      "data": "2026-06-04",
+      "titulo": "Feriado — Corpus Christi",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-06-05",
+      "titulo": "Dia Mundial do Meio Ambiente",
+      "tipo": "evento",
+      "descricao": "Ações sobre saúde ambiental e prevenção de doenças transmitidas por vetores em Barra do Garças."
+    },
+    {
+      "data": "2026-06-08",
+      "titulo": "Início Multivacinação Infantil 2026",
+      "tipo": "campanha",
+      "descricao": "Atualização do cartão vacinal para crianças de 0 a 5 anos. Todos os postos de Barra do Garças. Sem agendamento."
+    },
+    {
+      "data": "2026-06-12",
+      "titulo": "Dia dos Namorados — Ação de Saúde",
+      "tipo": "evento",
+      "descricao": "Distribuição de preservativos e material informativo sobre ISTs nas UBS. Testagem rápida disponível."
+    },
+    {
+      "data": "2026-06-21",
+      "titulo": "Dia Nacional da Saúde Pública",
+      "tipo": "evento",
+      "descricao": "Comemorações e atividades educativas nas unidades de saúde de Barra do Garças."
+    },
+    {
+      "data": "2026-06-26",
+      "titulo": "Encerramento Multivacinação Infantil",
+      "tipo": "campanha",
+      "descricao": "Último dia para atualização do cartão vacinal infantil 2026."
+    },
+    {
+      "data": "2026-06-27",
+      "titulo": "Dia Nacional de Prevenção às DSTs",
+      "tipo": "evento",
+      "descricao": "Testagem rápida para HIV, sífilis e hepatites disponível gratuitamente nas UBS."
+    },
+    {
+      "data": "2026-07-04",
+      "titulo": "Independência do Mato Grosso",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-07-28",
+      "titulo": "Dia Mundial da Hepatite",
+      "tipo": "evento",
+      "descricao": "Testagem gratuita para hepatites B e C. Vacinação disponível nas UBS de Barra do Garças."
+    },
+    {
+      "data": "2026-08-01",
+      "titulo": "Início Agosto Dourado",
+      "tipo": "campanha",
+      "descricao": "Campanha de incentivo ao aleitamento materno. Ações nas UBS e no CEM durante todo o mês."
+    },
+    {
+      "data": "2026-08-09",
+      "titulo": "Dia Nacional da Saúde",
+      "tipo": "evento",
+      "descricao": "Ações de saúde preventiva em todas as UBS. Aferição de PA, glicemia e IMC gratuitos."
+    },
+    {
+      "data": "2026-08-31",
+      "titulo": "Encerramento Agosto Dourado",
+      "tipo": "campanha",
+      "descricao": "Último dia da campanha de aleitamento materno 2026."
+    },
+    {
+      "data": "2026-09-07",
+      "titulo": "Feriado — Independência do Brasil",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-09-21",
+      "titulo": "Dia Mundial da Doença de Alzheimer",
+      "tipo": "evento",
+      "descricao": "Conscientização e informações sobre diagnóstico precoce. Atendimento neurológico via encaminhamento no CEM."
+    },
+    {
+      "data": "2026-09-28",
+      "titulo": "Dia Mundial do Coração",
+      "tipo": "evento",
+      "descricao": "Medição gratuita de pressão arterial e glicemia. Palestras sobre saúde cardiovascular na UBS Centro."
+    },
+    {
+      "data": "2026-10-01",
+      "titulo": "Dia Internacional do Idoso",
+      "tipo": "evento",
+      "descricao": "Ações especiais para a terceira idade. Vacinação e aferição de PA gratuitas em todos os postos."
+    },
+    {
+      "data": "2026-10-02",
+      "titulo": "Feriado — Eleições Municipais 2026",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-10-12",
+      "titulo": "Feriado — N. Sra. Aparecida",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-10-01",
+      "titulo": "Início Outubro Rosa",
+      "tipo": "campanha",
+      "descricao": "Campanha de prevenção ao câncer de mama. Mamografias e exames preventivos no CEM — agendar via UBS."
+    },
+    {
+      "data": "2026-10-31",
+      "titulo": "Encerramento Outubro Rosa",
+      "tipo": "campanha",
+      "descricao": "Último dia do Outubro Rosa 2026."
+    },
+    {
+      "data": "2026-11-02",
+      "titulo": "Feriado — Finados",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-11-15",
+      "titulo": "Feriado — Proclamação da República",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-11-01",
+      "titulo": "Início Novembro Azul",
+      "tipo": "campanha",
+      "descricao": "Campanha de prevenção ao câncer de próstata. Exames e informações disponíveis no CEM via encaminhamento."
+    },
+    {
+      "data": "2026-11-14",
+      "titulo": "Dia Mundial do Diabetes",
+      "tipo": "evento",
+      "descricao": "Testagem gratuita de glicemia em todas as UBS de Barra do Garças. Sem agendamento."
+    },
+    {
+      "data": "2026-11-20",
+      "titulo": "Dia da Consciência Negra",
+      "tipo": "evento",
+      "descricao": "Ações de saúde da população negra. Informações sobre doenças com maior prevalência na comunidade."
+    },
+    {
+      "data": "2026-12-01",
+      "titulo": "Dia Mundial da AIDS",
+      "tipo": "evento",
+      "descricao": "Testagem rápida para HIV e sífilis gratuita nas UBS. Distribuição de preservativos e material informativo."
+    },
+    {
+      "data": "2026-12-08",
+      "titulo": "Feriado — N. Sra. da Conceição",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    },
+    {
+      "data": "2026-12-25",
+      "titulo": "Feriado — Natal",
+      "tipo": "feriado",
+      "descricao": "Postos de saúde fechados. UPA 24h funciona normalmente."
+    }
+  ],
+  "calendario_vacinal": [
+    {
+      "faixa": "Ao nascer",
+      "vacina": "BCG + Hepatite B",
+      "doses": "Dose única + 1ª dose",
+      "observacao": "Aplicar na maternidade",
+      "ordem": 1
+    },
+    {
+      "faixa": "2 meses",
+      "vacina": "Pentavalente + VIP + Pneumocócica 10V + Rotavírus",
+      "doses": "1ª dose",
+      "observacao": "",
+      "ordem": 2
+    },
+    {
+      "faixa": "3 meses",
+      "vacina": "Meningocócica C",
+      "doses": "1ª dose",
+      "observacao": "",
+      "ordem": 3
+    },
+    {
+      "faixa": "4 meses",
+      "vacina": "Pentavalente + VIP + Pneumocócica 10V + Rotavírus",
+      "doses": "2ª dose",
+      "observacao": "",
+      "ordem": 4
+    },
+    {
+      "faixa": "5 meses",
+      "vacina": "Meningocócica C",
+      "doses": "2ª dose",
+      "observacao": "",
+      "ordem": 5
+    },
+    {
+      "faixa": "6 meses",
+      "vacina": "Pentavalente + VIP + Hepatite B + Influenza",
+      "doses": "3ª dose + 1ª dose anual",
+      "observacao": "Influenza: dose semestral para crianças até 6 anos",
+      "ordem": 6
+    },
+    {
+      "faixa": "9 meses",
+      "vacina": "Febre Amarela",
+      "doses": "Dose única",
+      "observacao": "Reforço aos 4 anos — Região endêmica MT",
+      "ordem": 7
+    },
+    {
+      "faixa": "12 meses",
+      "vacina": "Tríplice viral (SCR) + Pneumocócica 10V + Meningocócica C",
+      "doses": "1ª dose / Reforço",
+      "observacao": "",
+      "ordem": 8
+    },
+    {
+      "faixa": "15 meses",
+      "vacina": "DTP + VOP + Varicela + Hepatite A + SCR 2ª dose",
+      "doses": "1º reforço / Doses",
+      "observacao": "",
+      "ordem": 9
+    },
+    {
+      "faixa": "4 anos",
+      "vacina": "DTP + VOP + Febre Amarela",
+      "doses": "2º reforço / Reforço",
+      "observacao": "",
+      "ordem": 10
+    },
+    {
+      "faixa": "9–14 anos",
+      "vacina": "HPV Quadrivalente",
+      "doses": "2 doses (intervalo 6 meses)",
+      "observacao": "Meninas 9–14 / Meninos 11–14 anos",
+      "ordem": 11
+    },
+    {
+      "faixa": "Adultos",
+      "vacina": "dT + Hepatite B + Febre Amarela",
+      "doses": "Conforme caderneta",
+      "observacao": "MT é área endêmica — verificar reforço Febre Amarela",
+      "ordem": 12
+    },
+    {
+      "faixa": "Gestantes",
+      "vacina": "dTpa + Hepatite B + Influenza",
+      "doses": "Obrigatórias",
+      "observacao": "A partir do 5º mês — disponível nas UBS e no Hospital Municipal",
+      "ordem": 13
+    },
+    {
+      "faixa": "Idosos 60+",
+      "vacina": "Influenza anual + Pneumocócica 23V + Herpes Zóster",
+      "doses": "1× ao ano",
+      "observacao": "Campanha gripe 2026: 28/03 a 30/05 — prioridade Barra do Garças",
+      "ordem": 14
+    }
+  ],
+  "avisos": [
+    {
+      "tipo": "info",
+      "texto": "Atendimento no CEM é exclusivo por encaminhamento das UBS de Barra do Garças.",
+      "ativo": 1,
+      "ordem": 1
+    }
+  ]
+}

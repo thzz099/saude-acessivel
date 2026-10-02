@@ -39,20 +39,26 @@ function varrer(dir) {
 }
 varrer(RAIZ);
 
-// [3] Nada do servidor pode aparecer nas pastas enviadas ao navegador
-for (const pasta of ['public', 'private']) {
-  const dir = path.join(RAIZ, pasta);
-  if (!fs.existsSync(dir)) continue;
-  (function checar(d) {
-    for (const n of fs.readdirSync(d)) {
-      const f = path.join(d, n);
-      if (fs.statSync(f).isDirectory()) { checar(f); continue; }
-      const txt = fs.readFileSync(f, 'utf8');
-      if (/process\.env|TURSO_|JWT_SECRET|createClient\(/.test(txt)) {
-        achados.push({ arq: path.relative(RAIZ, f), linha: '-', tipo: 'Referência a segredo no frontend' });
-      }
-    }
-  })(dir);
+// [3] Separação de camadas: o frontend é enviado ao navegador, então NADA
+// do servidor pode estar nele; e o backend não deve conter páginas/estilos.
+function listar(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).flatMap((n) => {
+    const f = path.join(dir, n);
+    return fs.statSync(f).isDirectory() ? listar(f) : [f];
+  });
+}
+for (const f of listar(path.join(RAIZ, 'frontend'))) {
+  if (!/\.(js|html|css)$/.test(f)) continue;
+  const txt = fs.readFileSync(f, 'utf8');
+  if (/process\.env|TURSO_|JWT_SECRET|createClient\(|require\(['"]/.test(txt)) {
+    achados.push({ arq: path.relative(RAIZ, f), linha: '-', tipo: 'Código de servidor/segredo dentro do FRONTEND' });
+  }
+}
+for (const f of listar(path.join(RAIZ, 'backend'))) {
+  if (/\.(html|css)$/.test(f)) {
+    achados.push({ arq: path.relative(RAIZ, f), linha: '-', tipo: 'Página/estilo dentro do BACKEND (deveria estar no frontend)' });
+  }
 }
 
 if (!fs.existsSync(path.join(RAIZ, '.gitignore')) ||
@@ -66,4 +72,4 @@ if (achados.length) {
   console.error('\n   Remova antes de fazer git push.\n');
   process.exit(1);
 }
-console.log('✅ Nenhum segredo encontrado no código.');
+console.log('✅ Nenhum segredo no código e camadas separadas (backend ≠ frontend).');

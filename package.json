@@ -1,19 +1,19 @@
 {
   "name": "saude-acessivel",
-  "version": "2.0.0",
-  "description": "SaúdeMap IA — portal municipal de saúde com geolocalização e IA de triagem",
-  "main": "server.js",
+  "version": "3.0.0",
+  "description": "SaúdeMap IA — portal municipal de saúde com geolocalização, IA de triagem e painel administrativo",
+  "main": "backend/src/server.js",
   "engines": {
     "node": "20.x"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "audit": "npm audit --omit=dev",
-    "audit:fix": "npm audit fix --omit=dev",
-    "check:secrets": "node scripts/verificar-segredos.js",
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
+    "test:backend": "node backend/testes/testar-backend.js",
     "test:ia": "node scripts/testar-ia.js",
-    "verificar": "npm run check:secrets && npm run test:ia && npm run audit"
+    "check:secrets": "node scripts/verificar-segredos.js",
+    "audit": "npm audit --omit=dev",
+    "verificar": "npm run check:secrets && npm run test:backend && npm run test:ia && npm run audit"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",

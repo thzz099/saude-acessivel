@@ -297,7 +297,7 @@ exp = {
 conteudo_js = ("/* Gerado automaticamente por ia/treinar_modelo.py — NÃO editar à mão. */\n"
                "const MODELO_IA = " + json.dumps(exp, ensure_ascii=False, separators=(",", ":")) + ";\n")
 import os
-destinos = ["modelo-ia.js"] + (["../public/ml/modelo-ia.js"] if os.path.isdir("../public/ml") else [])
+destinos = ["modelo-ia.js"] + (["../frontend/assets/ml/modelo-ia.js"] if os.path.isdir("../frontend/assets/ml") else [])
 for d in destinos:
     with open(d, "w", encoding="utf-8") as f:
         f.write(conteudo_js)

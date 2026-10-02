@@ -1,6 +1,6 @@
-# Segurança — SaúdeMap IA
+# Segurança — SaúdeMap IA (v3)
 
-Checklist de 20 itens aplicado ao sistema. Os números `[n]` aparecem nos comentários do código (`server.js`, `database.js`) para rastrear onde cada controle está.
+Checklist de 20 itens aplicado ao sistema. Os números `[n]` aparecem nos comentários do código em `backend/src/` para rastrear onde cada controle está.
 
 **Legenda:** ✅ implementado · ⚙️ implementado, exige ação sua · ➖ não se aplica (com equivalente)
 
@@ -10,12 +10,12 @@ Checklist de 20 itens aplicado ao sistema. Os números `[n]` aparecem nos coment
 
 | # | Item | Status | Onde |
 |---|---|---|---|
-| 1 | Esconder API keys | ✅ | `server.js`, `database.js` — segredos só via `.env` |
+| 1 | Esconder API keys | ✅ | `backend/src/config/env.js` — segredos só via `.env` |
 | 2 | Limpar secrets do git | ⚙️ | **Trocar as credenciais** (ver abaixo) + `npm run check:secrets` |
-| 3 | Chave do banco fora do frontend | ✅ | Banco acessado só pelo servidor; scanner verifica `public/` |
+| 3 | Chave do banco fora do frontend | ✅ | Banco acessado só pelo backend; scanner verifica `frontend/` |
 | 4 | Ativar RLS | ➖ | Turso não tem RLS; equivalente na aplicação |
 | 5 | Criptografia de dados | ✅ | TLS em trânsito, hash de senha, minimização de dados |
-| 6 | Auth no servidor | ✅ | Portal em `private/`, só entregue com sessão válida |
+| 6 | Auth no servidor | ✅ | `routes/paginas.routes.js` — portal e painel só com sessão (e perfil) válidos |
 | 7 | Restringir acessos | ✅ | Coluna `perfil` + middleware `exigirPerfil('ADMIN')` |
 | 8 | Bloquear mass assignment | ✅ | Whitelist de campos; `perfil` definido pelo servidor |
 | 9 | Proteger cookies | ✅ | `HttpOnly` + `Secure` + `SameSite=Lax` |
@@ -33,48 +33,11 @@ Checklist de 20 itens aplicado ao sistema. Os números `[n]` aparecem nos coment
 
 ---
 
-## ⚠️ AÇÕES OBRIGATÓRIAS ANTES DO PRÓXIMO DEPLOY
+## Histórico
 
-A ordem importa. Se fizer o `git push` antes do passo 2, o site **cai** no Render — o servidor agora se recusa a iniciar sem um `JWT_SECRET` forte (é proposital).
+- **v2 (set/2026):** checklist aplicado; `JWT_SECRET` e token do Turso **trocados** (o antigo `.env` pode ter passado pelo histórico do Git); vulnerabilidades de dependências **6 → 0**.
+- **v3 (out/2026):** painel administrativo, banco com 13 tabelas, tempo real. Novas proteções na seção "Proteções da v3" abaixo.
 
-### Passo 1 — Gerar um JWT_SECRET novo
-```
-node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
-```
-Copie o resultado (96 caracteres).
-
-### Passo 2 — Atualizar no Render ANTES do push
-Painel do Render → seu serviço → **Environment** → edite `JWT_SECRET` → cole o valor novo → **Save**.
-
-Aproveite e adicione `NODE_ENV` = `production`.
-
-### Passo 3 — Trocar o token do Turso (item 2)
-O histórico do projeto teve um commit chamado "Delete .env" — então pode ter existido um `.env` no GitHub em algum momento. **Apagar o arquivo não apaga o histórico**: quem tiver o link do commit antigo ainda consegue ver. A única correção real é **invalidar a credencial**:
-
-1. `app.turso.tech` → seu banco → gere um **novo token**
-2. Revogue/delete o token antigo no mesmo painel
-3. Atualize `TURSO_AUTH_TOKEN` no Render **e** no seu `.env` local
-
-> Isso também desloga todo mundo (o segredo mudou). É esperado.
-
-### Passo 4 — Atualizar o `.env` local
-Com o `JWT_SECRET` e o `TURSO_AUTH_TOKEN` novos.
-
-### Passo 5 — Instalar e verificar
-```
-npm install
-npm run verificar
-```
-O `verificar` roda o scanner de segredos, o teste da IA e o `npm audit`. **Me mande a saída do `npm audit`** — daqui eu não consigo rodar (sem acesso ao registro do npm).
-
-### Passo 6 — Só então o push
-```
-git add .
-git commit -m "Checklist de seguranca e IA de triagem v2"
-git push
-```
-
----
 
 ## Detalhamento por item
 
@@ -90,8 +53,8 @@ git push
 - Credenciais possivelmente expostas no passado: **trocar** (passos 1–3 acima).
 
 ### 3 — Chave do banco fora do frontend
-- Só o `server.js`/`database.js` falam com o Turso. O navegador nunca vê URL nem token do banco.
-- O scanner confirma que `public/` e `private/` não contêm `process.env`, `TURSO_`, `JWT_SECRET` nem `createClient`.
+- Só o `backend/` fala com o Turso (`db/conexao.js`). O navegador nunca vê URL nem token do banco.
+- O scanner (`npm run check:secrets`) confirma que `frontend/` não contém `process.env`, `TURSO_`, `JWT_SECRET`, `createClient` nem `require(` — e que o `backend/` não contém HTML/CSS. Ou seja: **verifica a separação de camadas**.
 
 ### 4 — RLS (Row Level Security)
 - RLS é recurso do PostgreSQL/Supabase. **O Turso (libSQL/SQLite) não tem.**
@@ -105,8 +68,11 @@ git push
 - **Em repouso:** depende do provedor (Turso). Se no futuro guardar dado de saúde, cifrar o campo com AES-256-GCM e chave em variável de ambiente.
 
 ### 6 — Autenticação no servidor
-- **Antes:** `index.html` ficava em `public/` e era entregue a qualquer um; só o JavaScript do navegador redirecionava pro login — dava pra ver a página com o JS desligado.
-- **Agora:** o portal está em `private/index.html`. A rota `/` verifica o token **no servidor** e redireciona para `/login.html` se não houver sessão válida.
+- O servidor decide quem recebe cada página (`backend/src/routes/paginas.routes.js`):
+  - `/login` → público
+  - `/` (portal) → só com sessão válida; senão redireciona para `/login`
+  - `/admin` (painel) → só administrador, com o perfil **conferido no banco** a cada acesso
+- CSS/JS/imagens ficam em `/assets` — não contêm dado sensível; os dados vêm da API, que também exige login.
 - `jwt.verify` fixa o algoritmo `HS256` (evita ataque de troca de algoritmo).
 
 ### 7 — Restringir acessos
@@ -203,6 +169,34 @@ Em produção, qualquer acesso via `http://` recebe redirecionamento 301 para `h
 - Versões mínimas atualizadas: `express` 4.21.2 (corrige falhas de `path-to-regexp` e `res.redirect`), `cookie-parser` 1.4.7 (corrige falha na lib `cookie`).
 - A troca `bcrypt` → `bcryptjs` elimina a árvore `node-pre-gyp`/`tar`/`glob` que gerava os avisos antigos.
 - **Pendente:** eu não consigo rodar o `npm audit` daqui. As 2 vulnerabilidades (1 alta, 1 crítica) que apareceram na sua instalação de julho provavelmente vinham dessas dependências — mas só a saída do `npm audit` confirma.
+
+---
+
+## Proteções da v3 (painel administrativo)
+
+Com dados editáveis pelo painel, surgiram riscos novos. Cada um foi tratado:
+
+| Risco | Proteção | Onde |
+|---|---|---|
+| **XSS armazenado** — admin (ou conta de admin invadida) cadastra `<script>` num nome de posto, que roda no navegador de todos os cidadãos | **Duas camadas:** o backend recusa `<` e `>` em qualquer texto; o frontend escapa todo dado do banco antes de exibir (`esc()`), inclusive no balão do mapa (o Leaflet interpreta o texto como HTML) | `utils/validacao.js` · `assets/js/app.js` · `assets/js/admin.js` |
+| **Admin rebaixado continua com acesso** — o token vale 7 dias | O perfil **não** fica no token: é lido do banco a cada requisição administrativa | `middlewares/autenticacao.js` (`exigirAdmin`) |
+| **CSRF** — outro site faz o navegador do admin enviar uma alteração | Cookie `SameSite=Lax` + JSON obrigatório + **verificação de origem**: requisição que altera dados vinda de outro domínio → 403 | `middlewares/seguranca.js` (`verificarOrigem`) |
+| **Mass assignment** — enviar `"excluido_em"`, `"id"`, `"perfil"` no corpo | Cada entidade declara seus campos; **só eles** são lidos. Nomes de tabela e coluna vêm do código, nunca do usuário | `services/entidades.js` · `utils/validacao.js` |
+| **Dado inválido no banco** | Validação no backend **e** restrições `CHECK` no próprio banco (status, datas, cores, coordenadas) — vale mesmo se o código tiver bug | `db/schema.sql` |
+| **Alteração sem rastro** | **Auditoria:** toda criação/edição/exclusão grava quem, o quê e quando — na **mesma transação** (se a auditoria falhar, a alteração é desfeita) | `services/auditoria.js` · `services/repositorio.js` |
+| **Exclusão acidental** | Exclusão exige digitar `EXCLUIR`. Unidades, profissionais e campanhas usam **exclusão lógica** (somem do site, mas ficam no banco) | `assets/js/admin.js` · `services/repositorio.js` |
+| **Admin se trancar fora** | Ninguém pode alterar o **próprio** perfil (evita ficar sem nenhum administrador) | `services/usuarios.js` |
+| **Ver histórico vacinal de outra pessoa** | `/api/me/vacinas` usa o id do **token assinado**, nunca um id enviado pelo cliente. Excluir vacina confere se ela pertence ao usuário da rota | `routes/dados.routes.js` · `services/usuarios.js` |
+| **Esgotar o servidor com conexões de tempo real** | Limite de 500 conexões simultâneas; canal exige login | `services/tempoReal.js` |
+| **Busca com curinga** (`%`, `_`) listar todos os usuários | Curingas do `LIKE` são escapados | `services/usuarios.js` |
+
+### Como virar administrador
+
+1. A pessoa cria a conta normalmente pelo site.
+2. Coloque o email dela em `ADMIN_EMAILS` (no `.env` e no Render), separado por vírgula.
+3. No próximo login (ou reinício do servidor), o perfil vira `ADMIN`.
+
+Depois, um admin pode promover outros pela tela **Usuários e vacinas** — e cada promoção fica na auditoria.
 
 ---
 

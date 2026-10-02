@@ -217,12 +217,12 @@ Gerados por `python gerar_graficos.py` em `graficos/`:
 | `relatorio_metricas.json` | Todos os números |
 | `matriz_confusao.png` | Matriz do teste C |
 | `referencia_python.json` | Previsões do Python, usadas para conferir o JS |
-| `../public/ml/modelo-ia.js` | Pesos exportados (usado pelo site) |
-| `../public/ml/sintomas-ia.js` | Motor de previsão no navegador |
+| `../frontend/assets/ml/modelo-ia.js` | Pesos exportados (usado pelo site) |
+| `../frontend/assets/ml/sintomas-ia.js` | Motor de previsão no navegador |
 
 ### Retreinar
 
-**No Colab:** abra o `.ipynb` no Google Colab → *Ambiente de execução → Executar tudo* → baixe o `modelo-ia.js` → substitua em `public/ml/`.
+**No Colab:** abra o `.ipynb` no Google Colab → *Ambiente de execução → Executar tudo* → baixe o `modelo-ia.js` → substitua em `frontend/assets/ml/`.
 
 **No computador (Python + scikit-learn):**
 ```
@@ -230,7 +230,7 @@ cd ia
 python gerar_dataset.py
 python treinar_modelo.py
 ```
-O script já grava o modelo em `public/ml/` sozinho. Depois:
+O script já grava o modelo em `frontend/assets/ml/` sozinho. Depois:
 ```
 npm run test:ia
 ```

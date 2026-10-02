@@ -1,6 +1,6 @@
 /* =============================================================
    scripts/testar-ia.js   →   npm run test:ia
-   Confere que o motor JavaScript (public/ml) reproduz EXATAMENTE
+   Confere que o motor JavaScript (frontend/assets/ml) reproduz EXATAMENTE
    as previsões do modelo treinado em Python, frase por frase.
    ============================================================= */
 const fs = require('fs');
@@ -10,10 +10,10 @@ const vm = require('vm');
 const raiz = path.join(__dirname, '..');
 const ctx = { window: {}, console };
 vm.createContext(ctx);
-vm.runInContext(fs.readFileSync(path.join(raiz, 'public/ml/modelo-ia.js'), 'utf8') +
+vm.runInContext(fs.readFileSync(path.join(raiz, 'frontend/assets/ml/modelo-ia.js'), 'utf8') +
   ';window.MODELO_IA = MODELO_IA;', ctx);
 ctx.MODELO_IA = ctx.window.MODELO_IA;
-vm.runInContext(fs.readFileSync(path.join(raiz, 'public/ml/sintomas-ia.js'), 'utf8'), ctx);
+vm.runInContext(fs.readFileSync(path.join(raiz, 'frontend/assets/ml/sintomas-ia.js'), 'utf8'), ctx);
 
 const { classificarSintomas, _iaInterno } = ctx.window;
 const ref = JSON.parse(fs.readFileSync(path.join(raiz, 'ia/referencia_python.json'), 'utf8'));
